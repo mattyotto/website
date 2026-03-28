@@ -4,10 +4,11 @@ import { Component as InfiniteGrid } from "@/components/ui/the-infinite-grid";
 import { MagicText } from "@/components/ui/magic-text";
 import { PageGridBackground } from "@/components/ui/page-grid-background";
 import TimeLine_01, { type TimeLine_01Entry } from "@/components/ui/release-time-line";
-import { Package, Sparkles, Zap } from "lucide-react";
+import { Package, Sparkles } from "lucide-react";
 import { Globe } from "@/components/ui/cobe-globe";
 import Contact from "@/components/ui/contact-sections";
 import { Nav } from "@/components/ui/nav";
+import ExperienceDock from "@/components/ui/experience-dock";
 
 const projects: TimeLine_01Entry[] = [
   {
@@ -26,18 +27,10 @@ const projects: TimeLine_01Entry[] = [
     items: ["Detail one", "Detail two", "Detail three"],
     image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2015&auto=format&fit=crop",
   },
-  {
-    icon: Zap,
-    title: "Project Three",
-    subtitle: "Coming soon",
-    description: "Placeholder for a real project.",
-    items: ["Detail one", "Detail two", "Detail three"],
-    image: "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?q=80&w=2076&auto=format&fit=crop",
-  },
 ];
 
 const travelMarkers = [
-  { id: "australia", location: [-33.8688, 151.2093] as [number, number], label: "Australia" },
+  { id: "australia", location: [-33.8688, 151.2093] as [number, number], label: "Sydney 🏠" },
   { id: "nz", location: [-36.8509, 174.7645] as [number, number], label: "New Zealand" },
   { id: "singapore", location: [1.3521, 103.8198] as [number, number], label: "Singapore" },
   { id: "china", location: [39.9042, 116.4074] as [number, number], label: "China" },
@@ -45,8 +38,7 @@ const travelMarkers = [
   { id: "indonesia", location: [-8.3405, 115.0920] as [number, number], label: "Indonesia" },
   { id: "germany", location: [52.5200, 13.4050] as [number, number], label: "Germany" },
   { id: "malta", location: [35.9375, 14.3754] as [number, number], label: "Malta" },
-  { id: "usa", location: [40.7128, -74.0060] as [number, number], label: "USA" },
-  { id: "la", location: [34.0522, -118.2437] as [number, number], label: "Los Angeles" },
+  { id: "usa", location: [39.5, -98.35] as [number, number], label: "USA" },
   { id: "canada", location: [43.6532, -79.3832] as [number, number], label: "Canada" },
   { id: "japan", location: [35.6762, 139.6503] as [number, number], label: "Japan" },
   { id: "thailand", location: [13.7563, 100.5018] as [number, number], label: "Thailand" },
@@ -58,11 +50,9 @@ const travelMarkers = [
   { id: "uk", location: [51.5074, -0.1278] as [number, number], label: "UK" },
   { id: "greece", location: [37.9838, 23.7275] as [number, number], label: "Greece" },
   { id: "croatia", location: [42.6507, 18.0944] as [number, number], label: "Croatia" },
-  { id: "monaco", location: [43.7384, 7.4246] as [number, number], label: "Monaco" },
-  { id: "vatican", location: [41.9029, 12.4534] as [number, number], label: "Vatican City" },
-  { id: "fiji", location: [-18.1416, 178.4419] as [number, number], label: "Fiji" },
+{ id: "fiji", location: [-18.1416, 178.4419] as [number, number], label: "Fiji" },
   { id: "chile", location: [-33.4489, -70.6693] as [number, number], label: "Chile" },
-  { id: "argentina", location: [-34.6037, -58.3816] as [number, number], label: "Argentina" },
+  { id: "argentina", location: [-38.4161, -63.6167] as [number, number], label: "Argentina" },
   { id: "uruguay", location: [-34.9011, -56.1645] as [number, number], label: "Uruguay" },
   { id: "bolivia", location: [-16.5000, -68.1500] as [number, number], label: "Bolivia" },
   { id: "peru", location: [-12.0464, -77.0428] as [number, number], label: "Peru" },
@@ -98,8 +88,11 @@ export default function Home() {
           </div>
         </div>
         <section id="about" className="py-16 px-4 bg-transparent flex items-center justify-center">
-          <div className="max-w-4xl mx-auto">
-            <MagicText text="I'm Matty — a builder who bridges product, data, and delivery. Senior Program Manager at Canva. Previously Pinterest, Accenture, and Gartner. I care about shipping things that actually work." />
+          <div className="max-w-4xl mx-auto w-full">
+            <MagicText text="👋  I'm Matty. I bridge product, data, and delivery and I've been doing it across the tech industry for 6+ years. I'm drawn to simple, well-crafted things: clean interfaces, tech that just works, and automations that actually make sense." />
+            <div className="mt-56">
+              <ExperienceDock />
+            </div>
           </div>
         </section>
         <section id="projects" className="bg-transparent">
@@ -109,9 +102,12 @@ export default function Home() {
             entries={projects}
           />
         </section>
-        <section id="travel" className="py-16 px-4 bg-transparent">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-2xl font-extrabold tracking-tight mb-16 text-center text-foreground">30+ Countries</h2>
+        <section id="travel" className="py-16 bg-transparent">
+          <div className="container">
+            <div className="mx-auto max-w-3xl">
+              <h2 className="mb-4 text-3xl font-bold tracking-tight md:text-5xl">Travel</h2>
+              <p className="mb-16 text-base text-muted-foreground md:text-lg">Countries I&apos;ve been.</p>
+            </div>
             <div className="w-full max-w-lg mx-auto">
               <Globe markers={travelMarkers} />
             </div>

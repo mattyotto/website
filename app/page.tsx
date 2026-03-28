@@ -90,7 +90,7 @@ export default function Home() {
         <section id="about" className="py-16 px-4 bg-transparent flex items-center justify-center">
           <div className="max-w-4xl mx-auto w-full">
             <MagicText text="👋  I'm Matty. I bridge product, data, and delivery and I've been doing it across the tech industry for 6+ years. I'm drawn to simple, well-crafted things: clean interfaces, tech that just works, and automations that actually make sense." />
-            <div className="mt-56">
+            <div className="mt-52">
               <ExperienceDock />
             </div>
           </div>

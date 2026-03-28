@@ -73,11 +73,11 @@ function DockDot({
   );
 
   return (
-    <div className="relative flex flex-col items-center">
+    <div className="relative flex flex-col items-center" onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
       {/* Logo above dot */}
       <div
-        className="absolute pointer-events-none"
-        style={{ bottom: '100%', marginBottom: 28 }}
+        className="absolute"
+        style={{ bottom: '100%', marginBottom: 23, pointerEvents: 'auto' }}
       >
         <img
           src={item.logo}
@@ -96,8 +96,6 @@ function DockDot({
             ? 'bg-zinc-900 dark:bg-zinc-100'
             : 'bg-zinc-400 dark:bg-zinc-600'
         )}
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
       />
 
       {/* Year caption below */}
@@ -155,11 +153,11 @@ export default function ExperienceDock() {
           onMouseLeave={() => mouseX.set(Infinity)}
         >
           {/* Rail background */}
-          <div className="absolute left-0 right-0 h-[5px] top-0 -translate-y-[10px]">
-            <div className="h-full w-full rounded-full bg-zinc-200 dark:bg-zinc-800" />
+          <div className="absolute h-[1.5px] top-0 z-10" style={{ left: -80, right: -80, transform: 'translateY(17px)' }}>
+            <div className="h-full w-full bg-zinc-200 dark:bg-zinc-800" />
             {lastActiveIndex >= 0 && (
               <div
-                className="absolute left-0 top-0 h-full rounded-full bg-zinc-900 dark:bg-zinc-100"
+                className="absolute left-0 top-0 h-full bg-zinc-900 dark:bg-zinc-100"
                 style={{ width: `${(lastActiveIndex / (experiences.length - 1)) * 100}%` }}
               />
             )}

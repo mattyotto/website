@@ -8,232 +8,215 @@
 
 **Project:** Matthew Giuffre Portfolio
 **Updated:** 2026-03-28
-**Theme:** Blueprint / Builder — graph paper aesthetic, handwritten accents, architectural personality
+**Theme:** Personal Sketchbook — Riso-print zine aesthetic
 
 ---
 
 ## Concept
 
-"Builder's Blueprint" — the site looks like a talented person left their working drafts on a drafting table.
-Light graph paper base, faint blueprint grid, hand-drawn typographic accents, technical mono labels.
-Confident and creative without being corporate or generic.
+A personal sketchbook brought to life. Loose hand-drawn line art with marker fill that bleeds outside the lines.
+Think risograph printing, 90s DIY zine culture, biro sketches coloured in with Copic markers on the wrong setting.
+Colour is flat, bright, and slightly translucent. Lines are casual, wobbly, never clean.
+Off-register colour overlap. Naive illustration rawness. Imperfection is the point.
+
+**Mood references:** Riso-print zines · 90s DIY photocopied flyers · loose editorial illustration · highlighter-over-biro · Copic marker bleed
 
 ---
 
-## Global Rules
+## Color Palette
 
-### Color Palette
+Riso-print inspired — maximum 3–4 colours total, used flat with translucency.
+Colours don't stay inside the lines. That's intentional.
 
-| Role | Hex | CSS Variable | Notes |
-|------|-----|--------------|-------|
-| Background | `#F8FAFF` | `--color-background` | Cool off-white, slight blue tint |
-| Surface | `#FFFFFF` | `--color-surface` | Cards sit on pure white |
-| Grid lines | `#BFCFE8` | `--color-grid` | Use at 30% opacity for blueprint grid texture |
-| Text Primary | `#0F1A2E` | `--color-text` | Deep navy — not pure black |
-| Text Muted | `#5A7396` | `--color-text-muted` | Blueprint-toned grey for labels/meta |
-| Accent | `#0077CC` | `--color-accent` | Blueprint blue — CTAs, links, highlights |
-| Accent Light | `#00BFFF` | `--color-accent-light` | Cyan — hover states, active elements |
-| Border | `#C8D9EE` | `--color-border` | Soft blueprint blue dividers |
-| Destructive | `#DC2626` | `--color-destructive` | Errors only |
+| Role | Hex | Riso equivalent | Usage |
+|------|-----|----------------|-------|
+| Paper | `#FAF8F3` | Uncoated cream stock | Page background |
+| Ink | `#1C1C2E` | Black / dark navy biro | Line art, primary text |
+| Yellow | `#FFE566` | Fluorescent Yellow | Highlight fills, bleeds, marker swipes |
+| Coral | `#FF6B6B` | Fluorescent Pink / Red | Accent fills, circle callouts, emphasis |
+| Blue | `#4A90D9` | Blue riso | Secondary accent, underlines |
+| Muted text | `#5A5A6E` | — | Secondary body text |
 
-**Color Notes:** Light base (graph paper white) + blueprint blue accent. Accent used sparingly — CTAs and hover states only. Never use pure black (#000) or pure white (#FFF) for large surfaces.
-
-### Typography
-
-| Role | Font | Weight | Usage |
-|------|------|--------|-------|
-| Display / Hero | `Caveat` | 600–700 | Hero name draw-in animation, section headers |
-| Technical Labels | `Space Mono` | 400–700 | Job titles, dates, company names, annotations |
-| Body | `Inter` | 400–500 | Paragraph text, descriptions, readable content |
-
-**Mood:** Architectural drafting meets personal portfolio — handwritten + technical + clean
-
-**Google Fonts import:**
-```css
-@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap');
-```
-
-**Tailwind fontFamily config:**
-```js
-fontFamily: {
-  display: ['Caveat', 'cursive'],      // Hero titles, section headers
-  mono: ['Space Mono', 'monospace'],   // Labels, dates, annotations
-  body: ['Inter', 'sans-serif'],       // Body text
-}
-```
-
-**Type Scale:**
-| Token | Size | Font | Usage |
-|-------|------|------|-------|
-| Hero | `clamp(3rem, 8vw, 6rem)` | Caveat 700 | Name in hero |
-| H1 | `2.5rem / 40px` | Caveat 600 | Page-level section headers |
-| H2 | `1.75rem / 28px` | Caveat 600 | Sub-section headers |
-| Label | `0.75rem / 12px` | Space Mono 400 uppercase | Dates, tags, annotations |
-| Body | `1rem / 16px` | Inter 400 | All paragraph text |
-| Small | `0.875rem / 14px` | Inter 400 | Secondary descriptions |
-
-### Blueprint Grid Texture
-
-Apply as a CSS background to the root layout:
-```css
-background-color: #F8FAFF;
-background-image:
-  linear-gradient(rgba(191, 207, 232, 0.3) 1px, transparent 1px),
-  linear-gradient(90deg, rgba(191, 207, 232, 0.3) 1px, transparent 1px);
-background-size: 32px 32px;
-```
-
-### Spacing
-
-| Token | Value | Usage |
-|-------|-------|-------|
-| `--space-xs` | `4px` | Tight inline gaps |
-| `--space-sm` | `8px` | Icon gaps, tag spacing |
-| `--space-md` | `16px` | Standard component padding |
-| `--space-lg` | `24px` | Card padding |
-| `--space-xl` | `32px` | Section inner padding |
-| `--space-2xl` | `48px` | Between sections (mobile) |
-| `--space-3xl` | `80px` | Between sections (desktop) |
-
-### Shadows
-
-Shadows should be blue-tinted, not grey (matches blueprint palette):
-
-| Level | Value | Usage |
-|-------|-------|-------|
-| `--shadow-sm` | `0 1px 3px rgba(0, 119, 204, 0.08)` | Subtle card lift |
-| `--shadow-md` | `0 4px 12px rgba(0, 119, 204, 0.12)` | Cards, buttons |
-| `--shadow-lg` | `0 8px 24px rgba(0, 119, 204, 0.16)` | Modals, featured cards |
+**Colour rules:**
+- Always apply at 60–80% opacity so fills feel translucent like real marker
+- Fills should visually overflow their containing line art by 3–8px
+- Never use more than 2 accent colours on one section
+- No gradients — flat only
+- Off-register effect: use a 2–3px offset duplicate in a second colour on hero type
 
 ---
 
-## Component Specs
+## Typography
 
-### Buttons
+| Role | Font | Weight | Feel |
+|------|------|--------|------|
+| Hero / Headers | `Kalam` | 400, 700 | Casual handwriting, slightly uneven baseline |
+| Annotations / Labels | `Caveat` | 400, 600 | Quick scribbled notes, margin text |
+| Body / Typewriter | `Special Elite` | 400 | Worn typewriter, slightly smudged letterforms |
+| Emphasis / Stamps | `Permanent Marker` | 400 | Bold marker, used for 1–2 word pops only |
 
+**CSS Import:**
 ```css
-/* Primary — blueprint blue */
-.btn-primary {
-  background: #0077CC;
-  color: white;
-  padding: 12px 24px;
-  border-radius: 6px;
-  font-family: 'Space Mono', monospace;
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  transition: all 200ms ease;
-  cursor: pointer;
-}
-.btn-primary:hover {
-  background: #0088EE;
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-md);
-}
+@import url('https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&family=Caveat:wght@400;600;700&family=Special+Elite&family=Permanent+Marker&display=swap');
+```
 
-/* Secondary — outlined */
-.btn-secondary {
-  background: transparent;
-  color: #0077CC;
-  border: 1.5px solid #C8D9EE;
-  padding: 12px 24px;
-  border-radius: 6px;
-  font-family: 'Space Mono', monospace;
-  font-size: 14px;
-  font-weight: 400;
-  transition: all 200ms ease;
-  cursor: pointer;
+**Type rules:**
+- Never perfectly centre-align body text — slight left-lean feels more natural
+- Vary letter-spacing slightly between headings for a hand-lettered feel
+- Use `letter-spacing: -0.02em` on large Kalam headings
+- Labels in Caveat, all lowercase, with `opacity: 0.75`
+
+---
+
+## Texture & Surface Techniques
+
+### Paper background
+```css
+background-color: #FAF8F3;
+```
+
+### Ruled lines (secondary sections only)
+```css
+background-image: repeating-linear-gradient(
+  transparent,
+  transparent 27px,
+  rgba(28, 28, 46, 0.06) 28px
+);
+background-size: 100% 28px;
+```
+
+### Marker fill bleed (key technique)
+Simulate colour bleeding outside line art using a blurred, offset background:
+```css
+.marker-fill {
+  position: relative;
 }
-.btn-secondary:hover {
-  border-color: #0077CC;
-  background: rgba(0, 119, 204, 0.04);
+.marker-fill::before {
+  content: '';
+  position: absolute;
+  inset: -4px -6px;
+  background: #FFE566;
+  opacity: 0.65;
+  border-radius: 40% 60% 55% 45% / 50% 45% 55% 50%;
+  transform: rotate(-1deg);
+  z-index: -1;
+  filter: blur(1px);
 }
 ```
 
-### Cards
-
+### Off-register text effect
+For hero name — duplicate offset by 2–3px in coral:
 ```css
-.card {
-  background: #FFFFFF;
-  border: 1px solid #C8D9EE;
-  border-radius: 8px;
-  padding: 24px;
-  box-shadow: var(--shadow-sm);
-  transition: all 250ms ease;
+.hero-name {
+  position: relative;
+  color: #1C1C2E;
 }
-.card:hover {
-  box-shadow: var(--shadow-md);
-  border-color: #0077CC;
-  transform: translateY(-2px);
+.hero-name::before {
+  content: attr(data-text);
+  position: absolute;
+  left: 2px;
+  top: 3px;
+  color: #FF6B6B;
+  opacity: 0.4;
+  z-index: -1;
 }
 ```
 
-### Annotation Labels (Space Mono)
+---
 
-Small technical labels styled like drafting annotations:
-```css
-.annotation {
-  font-family: 'Space Mono', monospace;
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: #5A7396;
-}
+## Hand-drawn SVG Elements
+
+All borders, underlines, circles, and decorative lines must be hand-drawn SVGs — never CSS borders.
+
+### Wobbly underline
+```svg
+<path d="M0,4 Q20,0 40,4 Q60,8 80,4 Q100,0 120,4"
+  stroke="#FFE566" stroke-width="6" fill="none"
+  stroke-linecap="round" opacity="0.7"/>
 ```
+
+### Imperfect circle callout (metric highlights)
+```svg
+<ellipse cx="50" cy="50" rx="48" ry="45"
+  stroke="#FF6B6B" stroke-width="3" fill="#FF6B6B" fill-opacity="0.15"
+  transform="rotate(-3)" stroke-dasharray="2 1"/>
+```
+
+### Sketched arrow
+```svg
+<path d="M0,0 C20,-5 40,5 60,0" stroke="#1C1C2E" stroke-width="2"
+  fill="none" stroke-linecap="round"/>
+<path d="M55,-4 L62,0 L55,4" stroke="#1C1C2E" stroke-width="2"
+  fill="none" stroke-linecap="round"/>
+```
+
+---
+
+## Component Patterns
+
+### Section headers
+- Kalam 700, large (2.5–4rem)
+- Yellow marker-fill bleed behind the text
+- Slight rotation: `transform: rotate(-1deg)`
+
+### Metric callouts ("3x quota", "$30M", "+10%")
+- Permanent Marker font
+- Imperfect SVG circle around the number
+- Coral fill at 15% opacity inside circle
+- Annotation below in Caveat: "consecutive quarters" etc.
+
+### Experience timeline
+- Vertical line: hand-drawn SVG path, slightly wobbly
+- Nodes: imperfect filled circles, not perfect
+- Company name: Kalam bold
+- Date / role: Caveat, muted
+- Description: Special Elite body text
+
+### Skill tags
+- Hand-drawn rectangular SVG border (not CSS)
+- Yellow or coral marker fill bleeding slightly outside
+- Special Elite text inside
+
+### CTA Buttons
+- SVG hand-drawn rectangle path as border — no CSS border-radius
+- Fill: yellow at 70% opacity
+- Text: Kalam or Permanent Marker
+- Hover: slight rotation `rotate(1deg)` over 200ms
 
 ---
 
 ## Animation Guidelines
 
-- **Hero name:** SVG path draw-in via Framer Motion (`pathLength` 0→1, duration 2.5s)
-- **Section headers:** Fade + slide up on scroll (`y: 20 → 0`, opacity 0→1, duration 0.6s)
-- **Cards:** Stagger entrance 50ms apart on scroll entry
-- **Timing:** Micro-interactions 150–250ms ease-out; entrances 400–600ms ease-out
-- **Reduced motion:** All animations must respect `prefers-reduced-motion`
-
----
-
-## Style Guidelines
-
-**Theme:** Blueprint / Builder
-**Style:** Architectural minimalism with handwritten personality
-**Key Effects:** Blueprint grid texture, SVG path draw-in, scroll-triggered entrances, blueprint ink hover states
-
-### Page Section Order
-1. Hero — Name (Caveat draw-in), role (Space Mono), avatar, CTA buttons
-2. About — Bio, bridges technical + business, handwritten header
-3. Experience — Timeline/cards with annotation-style dates
-4. Skills — Blueprint-styled category grid
-5. Education — Clean card list
-6. Awards — Highlighted card
-7. Contact — Email + LinkedIn sign-off
+- **Entrance:** Elements draw in like someone sketching — SVG `pathLength` 0→1
+- **Hover states:** Slight wobble `rotate(-1deg) → rotate(1deg)` over 200ms
+- **Scroll reveals:** Fade + slight upward drift, staggered 60ms apart
+- **No slick/smooth animations** — slightly imperfect timing is intentional
+- **Respect `prefers-reduced-motion`** — disable all animations
 
 ---
 
 ## Anti-Patterns (Do NOT Use)
 
-- ❌ Dark backgrounds — this is a light blueprint theme
-- ❌ Generic blue (`#2563EB`) — use blueprint blue (`#0077CC`) only
-- ❌ Orange/warm CTAs — clashes with blueprint palette
-- ❌ Rounded pill buttons — use subtle radius (6px) for a drafting aesthetic
-- ❌ Emoji as icons — use Lucide React SVG icons only
-- ❌ Missing `cursor: pointer` on clickable elements
-- ❌ Instant state changes — always transition 150–300ms
-- ❌ Low contrast text — maintain 4.5:1 minimum
+- ❌ Clean CSS borders — hand-drawn SVG paths only
+- ❌ Perfect circles — always slightly off with organic rotation/shape
+- ❌ Gradients or drop shadows — flat only
+- ❌ Polished fonts (no Inter, Helvetica, Geist, etc.)
+- ❌ Pixel-perfect alignment — slight offsets are intentional
+- ❌ More than 3 accent colours at once
+- ❌ Solid colour fills — always semi-transparent (55–80% opacity)
+- ❌ Smooth app-like interactions — keep it tactile and imperfect
 
 ---
 
 ## Pre-Delivery Checklist
 
-- [ ] Blueprint grid texture applied to root layout
-- [ ] Caveat used only for display/headers — not body text
-- [ ] Space Mono used for all labels, dates, annotations
-- [ ] Inter used for all body/paragraph text
-- [ ] Accent `#0077CC` used sparingly (CTAs, links, hover)
-- [ ] No emojis — Lucide icons only
-- [ ] `cursor-pointer` on all interactive elements
-- [ ] Hover transitions 150–300ms
-- [ ] Text contrast 4.5:1 minimum
-- [ ] `prefers-reduced-motion` respected for all animations
+- [ ] Paper background `#FAF8F3` applied
+- [ ] All decorative borders are hand-drawn SVGs, not CSS
+- [ ] Marker fills bleed 3–8px outside line art at 60–80% opacity
+- [ ] Off-register hero text effect applied
+- [ ] No more than 3 accent colours per section
+- [ ] Kalam for headers, Caveat for annotations, Special Elite for body
+- [ ] Metric callouts circled with imperfect SVG ellipses
+- [ ] Hover states include slight rotation/wobble
+- [ ] `prefers-reduced-motion` respected
 - [ ] Responsive: 375px / 768px / 1024px / 1440px
-- [ ] No horizontal scroll on mobile

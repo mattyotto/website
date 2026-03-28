@@ -4,7 +4,7 @@ import { Component as InfiniteGrid } from "@/components/ui/the-infinite-grid";
 import { MagicText } from "@/components/ui/magic-text";
 import { PageGridBackground } from "@/components/ui/page-grid-background";
 import TimeLine_01, { type TimeLine_01Entry } from "@/components/ui/release-time-line";
-import { Package, Sparkles } from "lucide-react";
+import { Package, Sparkles, Zap } from "lucide-react";
 import { Globe } from "@/components/ui/cobe-globe";
 import Contact from "@/components/ui/contact-sections";
 import { Nav } from "@/components/ui/nav";
@@ -26,6 +26,14 @@ const projects: TimeLine_01Entry[] = [
     description: "Placeholder for a real project.",
     items: ["Detail one", "Detail two", "Detail three"],
     image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2015&auto=format&fit=crop",
+  },
+  {
+    icon: Zap,
+    title: "Project Three",
+    subtitle: "Coming soon",
+    description: "Placeholder for a real project.",
+    items: ["Detail one", "Detail two", "Detail three"],
+    image: "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?q=80&w=2076&auto=format&fit=crop",
   },
 ];
 

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { ArrowUpRight, Package, Calendar, Sparkles, Zap } from "lucide-react";
+import { ArrowUpRight, Package, Calendar, Sparkles, Zap, ChevronLeft, ChevronRight } from "lucide-react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
@@ -144,8 +144,16 @@ export default function TimeLine_01({
   entries = defaultEntries,
 }: TimeLine_01Props) {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [hovered, setHovered] = useState(false);
   const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
   const sentinelRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const scroll = (dir: 'prev' | 'next') => {
+    const el = scrollRef.current;
+    if (!el) return;
+    el.scrollBy({ left: dir === 'next' ? el.clientWidth : -el.clientWidth, behavior: 'smooth' });
+  };
 
   // Create stable setters for refs inside map
   const setItemRef = (el: HTMLDivElement | null, i: number) => {
@@ -192,7 +200,7 @@ export default function TimeLine_01({
   }, []);
 
   return (
-    <section className="py-32">
+    <section className="py-32" onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
       <div className="container">
         <div className="mx-auto max-w-3xl">
           <h1 className="mb-4 text-3xl font-bold tracking-tight md:text-5xl">
@@ -202,36 +210,55 @@ export default function TimeLine_01({
             {description}
           </p>
         </div>
+      </div>
 
-        <div className="mx-auto mt-16 max-w-3xl space-y-16 md:mt-24 md:space-y-24">
+      <div className="relative mt-16 md:mt-24">
+        {/* Prev arrow */}
+        <button
+          onClick={() => scroll('prev')}
+          className={`absolute left-4 top-1/2 -translate-y-1/2 z-20 rounded-full border border-border bg-background/80 backdrop-blur p-2 shadow-md transition-opacity duration-200 ${hovered ? 'opacity-100' : 'opacity-0'}`}
+          aria-label="Previous"
+        >
+          <ChevronLeft className="w-5 h-5" />
+        </button>
+
+        {/* Next arrow */}
+        <button
+          onClick={() => scroll('next')}
+          className={`absolute right-4 top-1/2 -translate-y-1/2 z-20 rounded-full border border-border bg-background/80 backdrop-blur p-2 shadow-md transition-opacity duration-200 ${hovered ? 'opacity-100' : 'opacity-0'}`}
+          aria-label="Next"
+        >
+          <ChevronRight className="w-5 h-5" />
+        </button>
+
+        <div
+          ref={scrollRef}
+          className="flex overflow-x-auto scroll-smooth pb-8 gap-4"
+          style={{
+            scrollSnapType: 'x mandatory',
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none',
+            maskImage: 'linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)',
+            WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)',
+          }}
+        >
           {entries.map((entry, index) => {
             const isActive = index === activeIndex;
+            const isFirst = index === 0;
+            const isLast = index === entries.length - 1;
 
             return (
               <div
                 key={index}
-                className="relative flex flex-col gap-4 md:flex-row md:gap-16"
+                className="relative shrink-0 w-[500px] max-w-[85vw]"
+                style={{
+                  scrollSnapAlign: 'center',
+                  marginLeft: isFirst ? 'max(1rem, calc((100vw - 1280px) / 2))' : undefined,
+                  marginRight: isLast ? 'calc(50vw - 250px)' : undefined,
+                }}
                 ref={(el) => setItemRef(el, index)}
                 aria-current={isActive ? "true" : "false"}
               >
-                {/* Sticky meta column */}
-                <div className="top-8 flex h-min w-64 shrink-0 items-center gap-4 md:sticky">
-                  <div className="flex items-center gap-3">
-                    <div className={`p-2 rounded-lg ${
-                      isActive ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
-                    }`}>
-                      <entry.icon className="h-4 w-4" />
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="text-sm font-medium">
-                        {entry.title}
-                      </span>
-                      <span className="text-xs text-muted-foreground">
-                        {entry.subtitle}
-                      </span>
-                    </div>
-                  </div>
-                </div>
 
                 {/* Invisible sentinel near the card title to measure proximity to viewport center */}
                 <div

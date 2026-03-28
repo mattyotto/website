@@ -15,7 +15,11 @@ export function Nav() {
   const [active, setActive] = useState("");
 
   useEffect(() => {
-    const handler = () => setScrolled(window.scrollY > 40);
+    const handler = () => {
+      setScrolled(window.scrollY > 40);
+      const nearBottom = window.innerHeight + window.scrollY >= document.body.scrollHeight - 80;
+      if (nearBottom) setActive("contact");
+    };
     window.addEventListener("scroll", handler, { passive: true });
     return () => window.removeEventListener("scroll", handler);
   }, []);

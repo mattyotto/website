@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 type Experience = {
   id: string;
   logo: string;
+  logoMono?: string;
   logoAlt: string;
   caption: string;
   active: boolean;
@@ -42,6 +43,7 @@ const experiences: Experience[] = [
   {
     id: 'canva',
     logo: '/logos/canva.png',
+    logoMono: '/logos/canva-black.png',
     logoAlt: 'Canva',
     caption: '2025',
     active: true,
@@ -80,9 +82,10 @@ function DockDot({
         style={{ bottom: '100%', marginBottom: 23, pointerEvents: 'auto' }}
       >
         <img
-          src={item.logo}
+          src={hovered ? item.logo : (item.logoMono ?? item.logo)}
           alt={item.logoAlt}
-          style={{ height: 50, width: 'auto', objectFit: 'contain', maxWidth: 'none', filter: hovered ? 'grayscale(0%)' : 'grayscale(100%)', transition: 'filter 0.2s ease' }}
+          className={cn(!hovered && !item.logoMono && 'brightness-0 dark:invert transition-[filter] duration-200', !hovered && item.logoMono && 'dark:invert')}
+          style={{ height: 50, width: 'auto', objectFit: 'contain', maxWidth: 'none' }}
         />
       </div>
 
@@ -90,7 +93,7 @@ function DockDot({
       <motion.div
         ref={ref}
         style={{ scale, width: 18, height: 18 }}
-        className={cn(
+        className={cn('relative z-10',
           'rounded-full ring-2 ring-black/10 dark:ring-white/10 cursor-pointer',
           item.active
             ? 'bg-zinc-900 dark:bg-zinc-100'
@@ -153,7 +156,7 @@ export default function ExperienceDock() {
           onMouseLeave={() => mouseX.set(Infinity)}
         >
           {/* Rail background */}
-          <div className="absolute h-[1.5px] top-0 z-10" style={{ left: -80, right: -80, transform: 'translateY(17px)' }}>
+          <div className="absolute h-[1.5px] top-0 z-0" style={{ left: -80, right: -80, transform: 'translateY(17px)' }}>
             <div className="h-full w-full bg-zinc-200 dark:bg-zinc-800" />
             {lastActiveIndex >= 0 && (
               <div

@@ -28,10 +28,10 @@ export default function Contact() {
     ]
 
     return (
-        <section className="py-14">
-            <div className="max-w-screen-xl mx-auto px-4 text-gray-600 gap-12 md:px-8 lg:flex">
+        <section className="py-20">
+            <div className="max-w-screen-xl mx-auto px-4 text-muted-foreground gap-12 md:px-8 lg:flex lg:justify-center lg:items-start">
                 <div className="max-w-md">
-                    <h3 className="text-gray-800 text-3xl font-semibold sm:text-4xl">
+                    <h3 className="text-foreground text-3xl font-semibold sm:text-4xl">
                         Let's connect
                     </h3>
                     <p className="mt-3">
@@ -52,10 +52,10 @@ export default function Contact() {
                         {
                             contactMethods.map((item, idx) => (
                                 <li key={idx} className="space-y-3 border-t py-6 md:max-w-sm md:py-0 md:border-t-0 lg:border-l lg:px-12 lg:max-w-none">
-                                    <div className="w-12 h-12 rounded-full border flex items-center justify-center text-gray-700">
+                                    <div className="w-12 h-12 rounded-full border flex items-center justify-center text-foreground">
                                         {item.icon}
                                     </div>
-                                    <h4 className="text-gray-800 text-lg font-medium xl:text-xl">
+                                    <h4 className="text-foreground text-lg font-medium xl:text-xl">
                                         {item.title}
                                     </h4>
                                     <p>

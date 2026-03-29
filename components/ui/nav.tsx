@@ -19,6 +19,11 @@ export function Nav() {
     const handler = () => {
       setScrolled(window.scrollY > 40);
       if (lockedRef.current) return;
+      const aboutEl = document.getElementById("about");
+      if (aboutEl && window.scrollY < aboutEl.offsetTop - window.innerHeight * 0.4) {
+        setActive("");
+        return;
+      }
       const nearBottom = window.innerHeight + window.scrollY >= document.body.scrollHeight - 80;
       if (nearBottom) setActive("contact");
     };
@@ -32,7 +37,15 @@ export function Nav() {
       (entries) => {
         if (lockedRef.current) return;
         entries.forEach((entry) => {
-          if (entry.isIntersecting) setActive(entry.target.id);
+          if (entry.isIntersecting) {
+            setActive(entry.target.id);
+          } else if (entry.boundingClientRect.bottom < 0) {
+            // Section has scrolled above viewport — find the next visible one or clear
+            const aboutEl = document.getElementById("about");
+            if (aboutEl && window.scrollY < aboutEl.offsetTop - window.innerHeight * 0.4) {
+              setActive("");
+            }
+          }
         });
       },
       { rootMargin: "-40% 0px -50% 0px" }

@@ -271,7 +271,7 @@ export default function TimeLine_01({
   }, []);
 
   return (
-    <section className="py-32" onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
+    <section className="pt-20 pb-12" onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
       <div className="container">
         <div className="mx-auto max-w-3xl">
           <h1 className="mb-4 text-3xl font-bold tracking-tight md:text-5xl">
@@ -371,7 +371,7 @@ export default function TimeLine_01({
                       <h2
                         className={
                           "text-md font-medium leading-tight tracking-tight md:text-lg transition-colors duration-200 " +
-                          (isActive ? "text-foreground" : "text-foreground/70")
+                          "text-foreground"
                         }
                       >
                         {entry.title}

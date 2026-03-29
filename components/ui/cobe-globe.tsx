@@ -63,7 +63,6 @@ export function Globe({
   const phiOffsetRef = useRef(0)
   const thetaOffsetRef = useRef(0)
   const isPausedRef = useRef(false)
-
   const handlePointerDown = useCallback(
     (e: React.PointerEvent) => {
       pointerInteracting.current = { x: e.clientX, y: e.clientY }
@@ -118,6 +117,7 @@ export function Globe({
     }
   }, [handlePointerMove, handlePointerUp])
 
+
   useEffect(() => {
     if (!canvasRef.current) return
     const canvas = canvasRef.current
@@ -162,22 +162,24 @@ export function Globe({
 
     function animate() {
       if (!isPausedRef.current) {
-        phi += speed
-        if (
-          Math.abs(velocity.current.phi) > 0.0001 ||
-          Math.abs(velocity.current.theta) > 0.0001
-        ) {
-          phiOffsetRef.current += velocity.current.phi
-          thetaOffsetRef.current += velocity.current.theta
-          velocity.current.phi *= 0.95
-          velocity.current.theta *= 0.95
-        }
-        const thetaMin = -0.4,
-          thetaMax = 0.4
-        if (thetaOffsetRef.current < thetaMin) {
-          thetaOffsetRef.current += (thetaMin - thetaOffsetRef.current) * 0.1
-        } else if (thetaOffsetRef.current > thetaMax) {
-          thetaOffsetRef.current += (thetaMax - thetaOffsetRef.current) * 0.1
+        {
+          phi += speed
+          if (
+            Math.abs(velocity.current.phi) > 0.0001 ||
+            Math.abs(velocity.current.theta) > 0.0001
+          ) {
+            phiOffsetRef.current += velocity.current.phi
+            thetaOffsetRef.current += velocity.current.theta
+            velocity.current.phi *= 0.95
+            velocity.current.theta *= 0.95
+          }
+          const thetaMin = -0.4,
+            thetaMax = 0.4
+          if (thetaOffsetRef.current < thetaMin) {
+            thetaOffsetRef.current += (thetaMin - thetaOffsetRef.current) * 0.1
+          } else if (thetaOffsetRef.current > thetaMax) {
+            thetaOffsetRef.current += (thetaMax - thetaOffsetRef.current) * 0.1
+          }
         }
       }
       globe!.update({

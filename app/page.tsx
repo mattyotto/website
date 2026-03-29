@@ -9,6 +9,7 @@ import { Globe } from "@/components/ui/cobe-globe";
 import Contact from "@/components/ui/contact-sections";
 import { Nav } from "@/components/ui/nav";
 import ExperienceDock from "@/components/ui/experience-dock";
+import DarkModeToggle from "@/components/ui/dark-mode-toggle";
 
 function PhotoCard({ src, label, width, height }: { src: string; label: string; width: number; height: number }) {
   return (
@@ -56,7 +57,7 @@ function PhotoCard({ src, label, width, height }: { src: string; label: string; 
 const projects: TimeLine_01Entry[] = [
   {
     icon: Package,
-    title: "Canva's App Explorer",
+    title: "Canva App Explorer",
     subtitle: "Canva · Internal Tool",
     description: "Allows internal Canva employees to easily access the library of app icons for the Apps Marketplace. Built on Canva's Apps SDK and runs from a Cloudflare Worker endpoint.",
     video: "/videos/AppExplorerDemo.mp4",
@@ -127,6 +128,9 @@ export default function Home() {
     >
       <PageGridBackground />
       <Nav />
+      <div className="absolute top-5 right-6 z-50">
+        <DarkModeToggle />
+      </div>
       <main className="relative z-10 flex flex-col">
         <div className="relative">
           <InfiniteGrid />
@@ -140,9 +144,9 @@ export default function Home() {
             />
           </div>
         </div>
-        <section id="about" className="pt-16 pb-32 px-4 bg-transparent flex items-center justify-center">
+        <section id="about" className="py-20 px-4 bg-transparent flex items-center justify-center">
           <div className="max-w-4xl mx-auto w-full">
-            <MagicText text="👋 I'm Matty. I bridge product, data, and delivery. Six years in tech. I care about simple things that work: clean interfaces, smart automations, and shipping stuff that matters." />
+            <MagicText text="👋 I'm Matty. I bridge product, data, and delivery. Six years in tech. I care about simple things that work — clean interfaces, smart automations and shipping stuff that matters." />
             <div className="mt-52">
               <ExperienceDock />
             </div>
@@ -155,7 +159,7 @@ export default function Home() {
             entries={projects}
           />
         </section>
-        <section id="travel" className="py-16 bg-transparent overflow-hidden">
+        <section id="travel" className="py-20 bg-transparent overflow-hidden">
           <div className="container">
             <div className="mx-auto max-w-3xl">
               <h2 className="mb-4 text-3xl font-bold tracking-tight md:text-5xl">Places I&apos;ve Been</h2>
@@ -198,7 +202,7 @@ export default function Home() {
 
             {/* Top-right — Malta portrait */}
             <div className="absolute hidden lg:block" style={{
-              top: '2%', right: 'calc(50% - 460px)',
+              top: '2%', right: 'calc(50% - 560px)',
               transform: 'rotate(4deg)',
               zIndex: 5,
             }}>

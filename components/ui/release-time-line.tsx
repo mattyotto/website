@@ -49,6 +49,8 @@ export type TimeLine_01Entry = {
   description: string;
   items?: string[];
   image?: string;
+  images?: string[];
+  video?: string;
   button?: {
     url: string;
     text: string;
@@ -60,6 +62,57 @@ export interface TimeLine_01Props {
   description?: string;
   entries?: TimeLine_01Entry[];
   className?: string;
+  firstCardMarginLeft?: number;
+}
+
+function ImageCarousel({ images, title }: { images: string[]; title: string }) {
+  const [idx, setIdx] = React.useState(0);
+  return (
+    <div className="relative mb-4 w-full h-72 rounded-lg overflow-hidden group">
+      <img
+        key={idx}
+        src={images[idx]}
+        alt={`${title} ${idx + 1}`}
+        className="w-full h-full object-cover transition-opacity duration-300"
+        loading="lazy"
+      />
+      {(images[idx].includes('before') || images[idx].includes('after')) && (
+        <span className="absolute top-3 right-3 px-2.5 py-0.5 rounded-full bg-black/60 text-white text-[10px] font-medium tracking-widest uppercase backdrop-blur-sm">
+          {images[idx].includes('before') ? 'Before' : 'After'}
+        </span>
+      )}
+      {/* Prev */}
+      {idx > 0 && (
+        <button
+          onClick={() => setIdx(i => i - 1)}
+          className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white rounded-full w-8 h-8 flex items-center justify-center transition-opacity opacity-0 group-hover:opacity-100"
+          aria-label="Previous"
+        >
+          ‹
+        </button>
+      )}
+      {/* Next */}
+      {idx < images.length - 1 && (
+        <button
+          onClick={() => setIdx(i => i + 1)}
+          className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white rounded-full w-8 h-8 flex items-center justify-center transition-opacity opacity-0 group-hover:opacity-100"
+          aria-label="Next"
+        >
+          ›
+        </button>
+      )}
+      {/* Dots */}
+      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">
+        {images.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setIdx(i)}
+            className={`w-1.5 h-1.5 rounded-full transition-all ${i === idx ? 'bg-white scale-125' : 'bg-white/50'}`}
+          />
+        ))}
+      </div>
+    </div>
+  );
 }
 
 export const defaultEntries: TimeLine_01Entry[] = [
@@ -142,12 +195,22 @@ export default function TimeLine_01({
   title = "Ruixen UI Release Notes",
   description = "Stay up to date with the latest components, features, and performance enhancements in Ruixen UI — built to help you design and ship faster.",
   entries = defaultEntries,
+  firstCardMarginLeft,
 }: TimeLine_01Props) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [hovered, setHovered] = useState(false);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
   const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
   const sentinelRefs = useRef<(HTMLDivElement | null)[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  const updateScrollState = () => {
+    const el = scrollRef.current;
+    if (!el) return;
+    setCanScrollLeft(el.scrollLeft > 4);
+    setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 4);
+  };
 
   const scroll = (dir: 'prev' | 'next') => {
     const el = scrollRef.current;
@@ -199,6 +262,14 @@ export default function TimeLine_01({
     setActiveIndex(0);
   }, []);
 
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    updateScrollState();
+    el.addEventListener('scroll', updateScrollState, { passive: true });
+    return () => el.removeEventListener('scroll', updateScrollState);
+  }, []);
+
   return (
     <section className="py-32" onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
       <div className="container">
@@ -206,17 +277,19 @@ export default function TimeLine_01({
           <h1 className="mb-4 text-3xl font-bold tracking-tight md:text-5xl">
             {title}
           </h1>
-          <p className="mb-6 text-base text-muted-foreground md:text-lg">
-            {description}
-          </p>
+          {description && (
+            <p className="mb-6 text-base text-muted-foreground md:text-lg">
+              {description}
+            </p>
+          )}
         </div>
       </div>
 
-      <div className="relative mt-16 md:mt-24">
+      <div className="relative mt-8 md:mt-10">
         {/* Prev arrow */}
         <button
           onClick={() => scroll('prev')}
-          className={`absolute left-4 top-1/2 -translate-y-1/2 z-20 rounded-full border border-border bg-background/80 backdrop-blur p-2 shadow-md transition-opacity duration-200 ${hovered ? 'opacity-100' : 'opacity-0'}`}
+          className={`absolute left-4 top-1/2 -translate-y-1/2 z-20 rounded-full border border-border bg-background/80 backdrop-blur p-2 shadow-md transition-opacity duration-200 ${hovered && canScrollLeft ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
           aria-label="Previous"
         >
           <ChevronLeft className="w-5 h-5" />
@@ -225,7 +298,7 @@ export default function TimeLine_01({
         {/* Next arrow */}
         <button
           onClick={() => scroll('next')}
-          className={`absolute right-4 top-1/2 -translate-y-1/2 z-20 rounded-full border border-border bg-background/80 backdrop-blur p-2 shadow-md transition-opacity duration-200 ${hovered ? 'opacity-100' : 'opacity-0'}`}
+          className={`absolute right-4 top-1/2 -translate-y-1/2 z-20 rounded-full border border-border bg-background/80 backdrop-blur p-2 shadow-md transition-opacity duration-200 ${hovered && canScrollRight ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
           aria-label="Next"
         >
           <ChevronRight className="w-5 h-5" />
@@ -233,13 +306,13 @@ export default function TimeLine_01({
 
         <div
           ref={scrollRef}
-          className="flex overflow-x-auto scroll-smooth pb-8 gap-4"
+          className="flex items-stretch overflow-x-auto scroll-smooth pb-8 gap-4"
           style={{
             scrollSnapType: 'x mandatory',
             scrollbarWidth: 'none',
             msOverflowStyle: 'none',
-            maskImage: 'linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)',
-            WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)',
+            maskImage: 'linear-gradient(to right, transparent 0%, black 8%, black 97%, transparent 100%)',
+            WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 8%, black 97%, transparent 100%)',
           }}
         >
           {entries.map((entry, index) => {
@@ -250,11 +323,11 @@ export default function TimeLine_01({
             return (
               <div
                 key={index}
-                className="relative shrink-0 w-[500px] max-w-[85vw]"
+                className="relative shrink-0 w-[500px] max-w-[85vw] flex flex-col"
                 style={{
                   scrollSnapAlign: 'center',
-                  marginLeft: isFirst ? 'max(1rem, calc((100vw - 1280px) / 2))' : undefined,
-                  marginRight: isLast ? 'calc(50vw - 250px)' : undefined,
+                  marginLeft: isFirst ? (firstCardMarginLeft ?? 'max(1rem, calc((100vw - 1280px) / 2))') : undefined,
+                  marginRight: isLast ? '2rem' : undefined,
                 }}
                 ref={(el) => setItemRef(el, index)}
                 aria-current={isActive ? "true" : "false"}
@@ -270,13 +343,21 @@ export default function TimeLine_01({
                 {/* Content column */}
                 <article
                   className={
-                    "flex flex-col rounded-2xl border p-3 transition-all duration-300 " +
-                    (isActive
-                      ? "border-gray-50 dark:border-gray-800 bg-gray-50 dark:bg-black shadow-lg"
-                      : "border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-black")
+                    "flex flex-col h-full rounded-2xl border p-3 transition-all duration-300 border-gray-50 dark:border-gray-800 bg-gray-50 dark:bg-black shadow-lg"
                   }
                 >
-                  {entry.image && (
+                  {entry.video ? (
+                    <video
+                      src={entry.video}
+                      className="mb-4 w-full h-72 rounded-lg object-cover"
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                    />
+                  ) : entry.images && entry.images.length > 0 ? (
+                    <ImageCarousel images={entry.images} title={entry.title} />
+                  ) : entry.image && (
                     <img
                       src={entry.image}
                       alt={`${entry.title} visual`}
@@ -302,24 +383,15 @@ export default function TimeLine_01({
                           "text-xs leading-relaxed md:text-sm transition-all duration-300 " +
                           (isActive
                             ? "text-muted-foreground line-clamp-none"
-                            : "text-muted-foreground/80 line-clamp-2")
+                            : "text-muted-foreground/80 line-clamp-none")
                         }
                       >
                         {entry.description}
                       </p>
                     </div>
 
-                    {/* Enhanced expandable content */}
-                    <div
-                      aria-hidden={!isActive}
-                      className={
-                        "grid transition-all duration-500 ease-out " +
-                        (isActive
-                          ? "grid-rows-[1fr] opacity-100"
-                          : "grid-rows-[0fr] opacity-0")
-                      }
-                    >
-                      <div className="overflow-hidden">
+                    <div>
+                      <div>
                         <div className="space-y-4 pt-2">
                           {entry.items && entry.items.length > 0 && (
                             <div className="rounded-lg border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-black p-4">

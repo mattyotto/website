@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
 
 const links = [
@@ -13,10 +13,12 @@ const links = [
 export function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState("");
+  const lockedRef = useRef(false);
 
   useEffect(() => {
     const handler = () => {
       setScrolled(window.scrollY > 40);
+      if (lockedRef.current) return;
       const nearBottom = window.innerHeight + window.scrollY >= document.body.scrollHeight - 80;
       if (nearBottom) setActive("contact");
     };
@@ -28,6 +30,7 @@ export function Nav() {
     const ids = links.map((l) => l.href.slice(1));
     const observer = new IntersectionObserver(
       (entries) => {
+        if (lockedRef.current) return;
         entries.forEach((entry) => {
           if (entry.isIntersecting) setActive(entry.target.id);
         });
@@ -43,6 +46,9 @@ export function Nav() {
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
+    setActive(href.slice(1));
+    lockedRef.current = true;
+    setTimeout(() => { lockedRef.current = false; }, 1200);
     const el = document.querySelector(href);
     if (el) el.scrollIntoView({ behavior: "smooth" });
   };

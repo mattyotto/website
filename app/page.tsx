@@ -10,30 +10,77 @@ import Contact from "@/components/ui/contact-sections";
 import { Nav } from "@/components/ui/nav";
 import ExperienceDock from "@/components/ui/experience-dock";
 
+function PhotoCard({ src, label, width, height }: { src: string; label: string; width: number; height: number }) {
+  return (
+    <div style={{
+      width,
+      borderRadius: 12,
+      overflow: 'hidden',
+      background: '#fff',
+      boxShadow: '0 8px 32px rgba(0,0,0,0.13), 0 2px 8px rgba(0,0,0,0.07)',
+      border: '1.5px solid rgba(255,255,255,0.7)',
+      transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+      cursor: 'pointer',
+    }}
+    onMouseEnter={e => {
+      (e.currentTarget as HTMLDivElement).style.transform = 'scale(1.2)';
+      (e.currentTarget as HTMLDivElement).style.boxShadow = '0 16px 48px rgba(0,0,0,0.18), 0 4px 16px rgba(0,0,0,0.1)';
+    }}
+    onMouseLeave={e => {
+      (e.currentTarget as HTMLDivElement).style.transform = 'scale(1)';
+      (e.currentTarget as HTMLDivElement).style.boxShadow = '0 8px 32px rgba(0,0,0,0.13), 0 2px 8px rgba(0,0,0,0.07)';
+    }}
+    >
+      <img
+        src={src}
+        alt={label}
+        style={{ width: '100%', height, objectFit: 'cover', display: 'block' }}
+        draggable={false}
+      />
+      <div style={{
+        padding: '6px 10px 7px',
+        fontSize: '0.65rem',
+        fontFamily: 'monospace',
+        letterSpacing: '0.06em',
+        textTransform: 'uppercase',
+        color: '#444',
+        background: '#fff',
+        whiteSpace: 'nowrap',
+      }}>
+        {label}
+      </div>
+    </div>
+  );
+}
+
 const projects: TimeLine_01Entry[] = [
   {
     icon: Package,
-    title: "Project One",
-    subtitle: "Coming soon",
-    description: "Placeholder for a real project.",
-    items: ["Detail one", "Detail two", "Detail three"],
-    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop",
+    title: "Canva's App Explorer",
+    subtitle: "Canva · Internal Tool",
+    description: "Allows internal Canva employees to easily access the library of app icons for the Apps Marketplace. Built on Canva's Apps SDK and runs from a Cloudflare Worker endpoint.",
+    video: "/videos/AppExplorerDemo.mp4",
   },
   {
     icon: Sparkles,
-    title: "Project Two",
-    subtitle: "Coming soon",
-    description: "Placeholder for a real project.",
-    items: ["Detail one", "Detail two", "Detail three"],
-    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2015&auto=format&fit=crop",
+    title: "Renovation Project",
+    subtitle: "Darlinghurst, Sydney",
+    description: "Turned a 19th century horse stable in Darlinghurst, Sydney into a one bedroom loft apartment. The sandstone walls and exposed timber rafters stayed. Everything else got a revamp.",
+    images: [
+      "/images/reno/before-exterior.jpg",
+      "/images/reno/before-living-room.jpg",
+      "/images/reno/before-bedroom.jpg",
+      "/images/reno/after-living-room.jpg",
+      "/images/reno/after-stair.jpg",
+      "/images/reno/after-bedroom.jpg",
+    ],
   },
   {
     icon: Zap,
-    title: "Project Three",
-    subtitle: "Coming soon",
-    description: "Placeholder for a real project.",
-    items: ["Detail one", "Detail two", "Detail three"],
-    image: "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?q=80&w=2076&auto=format&fit=crop",
+    title: "n8n Automations",
+    subtitle: "Ops & Workflow Automation",
+    description: "I build n8n workflows to automate operations and work processes. This one pipes every new app release from Canva's marketplace directly into Slack — no manual monitoring needed.",
+    video: "/videos/n8nworkflow.mp4",
   },
 ];
 
@@ -44,23 +91,21 @@ const travelMarkers = [
   { id: "china", location: [39.9042, 116.4074] as [number, number], label: "China" },
   { id: "hongkong", location: [22.3193, 114.1694] as [number, number], label: "Hong Kong" },
   { id: "indonesia", location: [-8.3405, 115.0920] as [number, number], label: "Indonesia" },
-  { id: "germany", location: [52.5200, 13.4050] as [number, number], label: "Germany" },
+  { id: "uk", location: [54.0, -2.0] as [number, number], label: "UK" },
+  { id: "france", location: [46.0, 2.0] as [number, number], label: "France" },
+  { id: "spain", location: [40.4168, -3.7038] as [number, number], label: "Spain" },
+  { id: "germany", location: [51.5, 10.0] as [number, number], label: "Germany" },
   { id: "malta", location: [35.9375, 14.3754] as [number, number], label: "Malta" },
+  { id: "greece", location: [39.0742, 21.8243] as [number, number], label: "Greece" },
   { id: "usa", location: [39.5, -98.35] as [number, number], label: "USA" },
   { id: "canada", location: [43.6532, -79.3832] as [number, number], label: "Canada" },
   { id: "japan", location: [35.6762, 139.6503] as [number, number], label: "Japan" },
   { id: "thailand", location: [13.7563, 100.5018] as [number, number], label: "Thailand" },
   { id: "mexico", location: [19.4326, -99.1332] as [number, number], label: "Mexico" },
   { id: "vietnam", location: [10.8231, 106.6297] as [number, number], label: "Vietnam" },
-  { id: "france", location: [48.8566, 2.3522] as [number, number], label: "France" },
-  { id: "italy", location: [41.9028, 12.4964] as [number, number], label: "Italy" },
-  { id: "spain", location: [40.4168, -3.7038] as [number, number], label: "Spain" },
-  { id: "uk", location: [51.5074, -0.1278] as [number, number], label: "UK" },
-  { id: "greece", location: [37.9838, 23.7275] as [number, number], label: "Greece" },
-  { id: "croatia", location: [42.6507, 18.0944] as [number, number], label: "Croatia" },
 { id: "fiji", location: [-18.1416, 178.4419] as [number, number], label: "Fiji" },
   { id: "chile", location: [-33.4489, -70.6693] as [number, number], label: "Chile" },
-  { id: "argentina", location: [-38.4161, -63.6167] as [number, number], label: "Argentina" },
+  { id: "argentina", location: [-55.0, -65.0] as [number, number], label: "Argentina" },
   { id: "uruguay", location: [-34.9011, -56.1645] as [number, number], label: "Uruguay" },
   { id: "bolivia", location: [-16.5000, -68.1500] as [number, number], label: "Bolivia" },
   { id: "peru", location: [-12.0464, -77.0428] as [number, number], label: "Peru" },
@@ -95,9 +140,9 @@ export default function Home() {
             />
           </div>
         </div>
-        <section id="about" className="py-16 px-4 bg-transparent flex items-center justify-center">
+        <section id="about" className="pt-16 pb-32 px-4 bg-transparent flex items-center justify-center">
           <div className="max-w-4xl mx-auto w-full">
-            <MagicText text="👋  I'm Matty. I bridge product, data, and delivery and I've been doing it across the tech industry for 6+ years. I'm drawn to simple, well-crafted things: clean interfaces, tech that just works, and automations that actually make sense." />
+            <MagicText text="👋 I'm Matty. I bridge product, data, and delivery. Six years in tech. I care about simple things that work: clean interfaces, smart automations, and shipping stuff that matters." />
             <div className="mt-52">
               <ExperienceDock />
             </div>
@@ -106,18 +151,77 @@ export default function Home() {
         <section id="projects" className="bg-transparent">
           <TimeLine_01
             title="Projects"
-            description="A selection of things I've built, shipped, or contributed to."
+            description="Things I've built. At work, at home, and everywhere in between."
             entries={projects}
           />
         </section>
-        <section id="travel" className="py-16 bg-transparent">
+        <section id="travel" className="py-16 bg-transparent overflow-hidden">
           <div className="container">
             <div className="mx-auto max-w-3xl">
-              <h2 className="mb-4 text-3xl font-bold tracking-tight md:text-5xl">Travel</h2>
-              <p className="mb-16 text-base text-muted-foreground md:text-lg">Countries I&apos;ve been.</p>
+              <h2 className="mb-4 text-3xl font-bold tracking-tight md:text-5xl">Places I&apos;ve Been</h2>
+              <p className="mb-16 text-base text-muted-foreground md:text-lg">The world is big. I&apos;m working on it.</p>
             </div>
-            <div className="w-full max-w-lg mx-auto">
+          </div>
+          <div className="relative w-full" style={{ minHeight: 620 }}>
+            {/* Globe centered */}
+            <div className="w-full max-w-lg mx-auto relative z-10">
               <Globe markers={travelMarkers} />
+            </div>
+
+            {/* Top-left — Indonesia portrait */}
+            <div className="absolute hidden lg:block" style={{
+              top: '2%', left: 'calc(50% - 460px)',
+              transform: 'rotate(-4deg)',
+              zIndex: 5,
+            }}>
+              <PhotoCard
+                src="/images/travel/malta.jpg"
+                label="Valletta, Malta"
+                width={155}
+                height={210}
+              />
+            </div>
+
+            {/* Bottom-left — Uruguay */}
+            <div className="absolute hidden lg:block" style={{
+              bottom: '4%', left: 'calc(50% - 530px)',
+              transform: 'rotate(5deg)',
+              zIndex: 5,
+            }}>
+              <PhotoCard
+                src="/images/travel/uruguay.jpg"
+                label="Colonia del Sacramento, Uruguay"
+                width={276}
+                height={186}
+              />
+            </div>
+
+            {/* Top-right — Malta portrait */}
+            <div className="absolute hidden lg:block" style={{
+              top: '2%', right: 'calc(50% - 460px)',
+              transform: 'rotate(4deg)',
+              zIndex: 5,
+            }}>
+              <PhotoCard
+                src="/images/travel/peru.jpg"
+                label="Rainbow Mountains, Peru"
+                width={230}
+                height={155}
+              />
+            </div>
+
+            {/* Bottom-right — Peru */}
+            <div className="absolute hidden lg:block" style={{
+              bottom: '4%', right: 'calc(50% - 450px)',
+              transform: 'rotate(-3deg)',
+              zIndex: 5,
+            }}>
+              <PhotoCard
+                src="/images/travel/indonesia.jpg"
+                label="Ubud, Indonesia"
+                width={195}
+                height={210}
+              />
             </div>
           </div>
         </section>

@@ -26,7 +26,7 @@ const experiences: Experience[] = [
     title: 'Management Consultant',
     org: 'Accenture',
     period: '2021 – 2023',
-    bullets: ['Business transformation for large tech firms', 'KYC remediation: 500k+ customer records'],
+    bullets: ['Business transformation for large tech firms', 'Big 4 Bank KYC remediation: 500k+ records'],
   },
   {
     id: 'pinterest',
@@ -34,10 +34,10 @@ const experiences: Experience[] = [
     logoAlt: 'Pinterest',
     caption: '2023',
     active: true,
-    title: 'Sr PM, SMB Sales',
+    title: 'Senior Program Manager',
     org: 'Pinterest',
     period: '2023 – 2025',
-    bullets: ['$30M annual SMB sales team, exceeded quota 3x', 'Built AI tool → +10% advertiser reply rate'],
+    bullets: ['Managed $30M annual SMB sales team, beat quota 3x', 'Built AI email flow → +10% advertiser reply rate'],
   },
   {
     id: 'canva',
@@ -45,10 +45,10 @@ const experiences: Experience[] = [
     logoAlt: 'Canva',
     caption: '2025',
     active: true,
-    title: 'Senior Program Manager',
+    title: 'Program Manager',
     org: 'Canva',
     period: '2025 – Present',
-    bullets: ['Owns Premium Apps monetisation', 'SQL analytics & commercial negotiations'],
+    bullets: ["Owns Canva's Premium Apps Program", "Product owner of Canva's Apps Marketplace"],
   },
 ];
 
@@ -124,7 +124,7 @@ function DockDot({
             <ul className="space-y-1.5">
               {item.bullets.map((b, i) => (
                 <li key={i} className="flex gap-1.5 text-xs text-zinc-600 dark:text-zinc-300">
-                  <span className="mt-px shrink-0 text-zinc-400">·</span>
+                  <span className="mt-px shrink-0 text-zinc-600 dark:text-zinc-300">·</span>
                   {b}
                 </li>
               ))}

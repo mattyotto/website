@@ -9,7 +9,6 @@ import { Globe } from "@/components/ui/cobe-globe";
 import Contact from "@/components/ui/contact-sections";
 import { Nav } from "@/components/ui/nav";
 import ExperienceDock from "@/components/ui/experience-dock";
-import DarkModeToggle from "@/components/ui/dark-mode-toggle";
 
 function PhotoCard({ src, label, width, height }: { src: string; label: string; width: number; height: number }) {
   return (
@@ -128,9 +127,6 @@ export default function Home() {
     >
       <PageGridBackground />
       <Nav />
-      <div className="absolute top-5 right-6 z-50">
-        <DarkModeToggle />
-      </div>
       <main className="relative z-10 flex flex-col">
         <div className="relative">
           <InfiniteGrid />

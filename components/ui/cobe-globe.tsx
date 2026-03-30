@@ -272,8 +272,8 @@ export function Globe({
             key={a.id}
             style={{
               position: "absolute",
-              // @ts-expect-error CSS Anchor Positioning
-              positionAnchor: `--cobe-arc-${a.id}`,
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              positionAnchor: `--cobe-arc-${a.id}` as any,
               bottom: "anchor(top)",
               left: "anchor(center)",
               translate: "-50% 0",

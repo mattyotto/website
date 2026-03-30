@@ -18,7 +18,7 @@ export const ThemeToggleButton2 = ({
       type="button"
       className={cn(
         "rounded-full transition-all duration-300 active:scale-95",
-        isDark ? "bg-black text-white" : "bg-black text-white",
+        "bg-foreground text-background dark:invert",
         className,
       )}
       onClick={onToggle}

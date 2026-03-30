@@ -11,15 +11,17 @@ interface TimelineItem {
   date: string;
   title: string;
   description?: string;
+  items?: string[];
   href?: string;
   icon?: React.ReactNode;
   logo?: string;
+  logoClassName?: string;
 }
 
 interface TimelineProps {
   items: TimelineItem[];
   initialCount?: number;
-  dateFormat?: Intl.DateTimeFormatOptions;
+  sortOrder?: "asc" | "desc";
   className?: string;
   showMoreText?: string;
   showLessText?: string;
@@ -115,6 +117,11 @@ function DesktopTimelineEntry({
                 {item.description}
               </p>
             )}
+            {item.items && item.items.map((bullet, i) => (
+              <p key={i} className={cn("text-sm text-muted-foreground", descriptionClassName)}>
+                · {bullet}
+              </p>
+            ))}
           </div>
         </div>
       </div>
@@ -124,6 +131,8 @@ function DesktopTimelineEntry({
 
 function MobileTimelineEntry({
   item,
+  isFirst,
+  isLast,
   dotClassName,
   lineClassName,
   titleClassName,
@@ -131,6 +140,8 @@ function MobileTimelineEntry({
   dateClassName,
 }: {
   item: TimelineItem;
+  isFirst?: boolean;
+  isLast?: boolean;
   dotClassName?: string;
   lineClassName?: string;
   titleClassName?: string;
@@ -138,73 +149,72 @@ function MobileTimelineEntry({
   dateClassName?: string;
 }) {
   return (
-    <Link
-      href={item.href || "#"}
-      className={cn(
-        "flex items-center space-x-4 rounded-lg px-4 py-3 transition-colors hover:bg-muted active:bg-muted/80 md:hidden",
-        !item.href && "pointer-events-none"
-      )}
-    >
-      <div className="relative">
-        <div className={cn("h-16 border-l border-border", lineClassName)} />
+    <div className="flex items-stretch md:hidden">
+      {/* Year — vertically aligned with dot */}
+      <div
+        className="w-14 flex-shrink-0 text-right pr-3"
+        style={{ paddingTop: isFirst ? 16 : 30 }}
+      >
+        <span className={cn("text-xs font-medium text-muted-foreground tabular-nums", dateClassName)}>
+          {new Date(item.date).toLocaleDateString("en-US", { year: "numeric" })}
+        </span>
+      </div>
+
+      {/* Line + dot */}
+      <div
+        className={cn(
+          "relative border-l-[1.5px] border-zinc-900 dark:border-zinc-100 flex-shrink-0 w-0",
+          isFirst ? "mt-[16px]" : "",
+          isLast ? "pb-2" : "pb-10",
+          lineClassName
+        )}
+      >
         <div
           className={cn(
-            "absolute -left-1 top-5 flex h-5 w-5 items-center justify-center rounded-full bg-primary/60",
-            !item.icon && "h-2.5 w-2.5",
+            "absolute -left-[5px] h-2.5 w-2.5 rounded-full bg-zinc-900 dark:bg-zinc-100",
             dotClassName
           )}
-        >
-          {item.icon && (
-            <div className="h-3 w-3 text-primary-foreground">{item.icon}</div>
-          )}
-        </div>
+          style={{ top: isFirst ? 16 : 30 }}
+        />
       </div>
-      <div>
-        <dl>
-          <dt className="sr-only">Date</dt>
-          <dd
-            className={cn(
-              "text-sm font-medium text-muted-foreground",
-              dateClassName
-            )}
-          >
-            <time dateTime={item.date}>
-              {new Date(item.date).toLocaleDateString("en-US", {
-                year: "numeric",
-              })}
-            </time>
-          </dd>
-        </dl>
-        <div className="flex items-start gap-3 mt-1">
-          {item.logo && (
-            <div className="flex-shrink-0 w-8 h-8 mt-0.5 flex items-center justify-center">
-              <img src={item.logo} alt="" className="w-full h-full object-contain" />
-            </div>
-          )}
-          <div>
-            <h3
-              className={cn(
-                "text-lg font-medium tracking-tight text-foreground",
-                titleClassName
-              )}
-            >
-              {item.title}
-            </h3>
-            {item.description && (
-              <p className={cn("text-sm text-muted-foreground", descriptionClassName)}>
-                {item.description}
-              </p>
-            )}
+
+      {/* Content */}
+      <div className={cn("flex-1 pl-5", isLast ? "pb-2" : "pb-10")} style={{ paddingTop: isFirst ? 10 : 24 }}>
+        {item.logo && (
+          <div className="mb-2 h-7 flex items-center">
+            <img
+              src={item.logo}
+              alt=""
+              className={cn("h-7 w-auto max-w-[2.5rem] object-contain object-left", item.logoClassName)}
+            />
           </div>
-        </div>
+        )}
+        <h3 className={cn("text-base font-semibold tracking-tight text-foreground leading-snug", titleClassName)}>
+          {item.title}
+        </h3>
+        {item.description && (
+          <p className={cn("mt-1 text-sm text-muted-foreground", descriptionClassName)}>
+            {item.description}
+          </p>
+        )}
+        {item.items && (
+          <ul className="mt-1 space-y-0.5">
+            {item.items.map((bullet, i) => (
+              <li key={i} className={cn("text-sm text-muted-foreground", descriptionClassName)}>
+                · {bullet}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
-    </Link>
+    </div>
   );
 }
 
 export function Timeline({
   items,
   initialCount = 5,
+  sortOrder = "desc",
   className,
   showMoreText = "Show More",
   showLessText = "Show Less",
@@ -220,44 +230,55 @@ export function Timeline({
   showAnimation = true,
 }: TimelineProps) {
   const [showAll, setShowAll] = useState(false);
-  const sortedItems = items.sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-  );
+  const sortedItems = [...items].sort((a, b) => {
+    const diff = new Date(b.date).getTime() - new Date(a.date).getTime();
+    return sortOrder === "asc" ? -diff : diff;
+  });
   const initialItems = sortedItems.slice(0, initialCount);
   const remainingItems = sortedItems.slice(initialCount);
 
   return (
-    <div className={cn("mx-5 max-w-2xl md:mx-auto", className)}>
+    <div className={cn("ml-6 mr-4 max-w-2xl md:mx-auto", className)}>
       <div className="md:translate-x-28">
-        <ul className="space-y-8">
-          {initialItems.map((item, index) => (
-            <motion.li
-              key={index}
-              initial={showAnimation ? { opacity: 0, y: 20 } : false}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
-                duration: animationDuration,
-                delay: index * animationDelay,
-              }}
-            >
-              <DesktopTimelineEntry
-                item={item}
-                dotClassName={dotClassName}
-                lineClassName={lineClassName}
-                titleClassName={titleClassName}
-                descriptionClassName={descriptionClassName}
-                dateClassName={dateClassName}
-              />
-              <MobileTimelineEntry
-                item={item}
-                dotClassName={dotClassName}
-                lineClassName={lineClassName}
-                titleClassName={titleClassName}
-                descriptionClassName={descriptionClassName}
-                dateClassName={dateClassName}
-              />
-            </motion.li>
-          ))}
+        <ul className="space-y-0">
+          {initialItems.map((item, index) => {
+            const globalIndex = index;
+            const totalCount = sortedItems.length <= initialCount
+              ? initialItems.length
+              : (showAll ? sortedItems.length : initialItems.length);
+            const isFirst = globalIndex === 0;
+            const isLast = !showAll && globalIndex === initialItems.length - 1;
+            return (
+              <motion.li
+                key={index}
+                initial={showAnimation ? { opacity: 0, y: 20 } : false}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: animationDuration,
+                  delay: index * animationDelay,
+                }}
+              >
+                <DesktopTimelineEntry
+                  item={item}
+                  dotClassName={dotClassName}
+                  lineClassName={lineClassName}
+                  titleClassName={titleClassName}
+                  descriptionClassName={descriptionClassName}
+                  dateClassName={dateClassName}
+                />
+                <MobileTimelineEntry
+                  item={item}
+                  isFirst={isFirst}
+                  isLast={isLast}
+                  dotClassName={dotClassName}
+                  lineClassName={lineClassName}
+                  titleClassName={titleClassName}
+                  descriptionClassName={descriptionClassName}
+                  dateClassName={dateClassName}
+                />
+              </motion.li>
+            );
+          })}
           <AnimatePresence>
             {showAll &&
               remainingItems.map((item, index) => (

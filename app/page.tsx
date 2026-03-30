@@ -9,6 +9,8 @@ import { Globe } from "@/components/ui/cobe-globe";
 import Contact from "@/components/ui/contact-sections";
 import { Nav } from "@/components/ui/nav";
 import ExperienceDock from "@/components/ui/experience-dock";
+import HoverRevealCards from "@/components/ui/cards";
+import { MobileThemeToggle } from "@/components/ui/mobile-theme-toggle";
 
 function PhotoCard({ src, label, width, height }: { src: string; label: string; width: number; height: number }) {
   return (
@@ -67,12 +69,10 @@ const projects: TimeLine_01Entry[] = [
     subtitle: "Darlinghurst, Sydney",
     description: "Turned a 19th century horse stable in Darlinghurst, Sydney into a one bedroom loft apartment. The sandstone walls and exposed timber rafters stayed. Everything else got a revamp.",
     images: [
-      "/images/reno/before-exterior.jpg",
       "/images/reno/before-living-room.jpg",
-      "/images/reno/before-bedroom.jpg",
+      "/images/reno/before-exterior.jpg",
       "/images/reno/after-living-room.jpg",
       "/images/reno/after-stair.jpg",
-      "/images/reno/after-bedroom.jpg",
     ],
   },
   {
@@ -155,16 +155,27 @@ export default function Home() {
             entries={projects}
           />
         </section>
-        <section id="travel" className="py-20 bg-transparent overflow-hidden">
-          <div className="container">
+        <section id="travel" className="py-20 bg-transparent">
+          <div className="container px-4">
             <div className="mx-auto max-w-3xl">
               <h2 className="mb-4 text-3xl font-bold tracking-tight md:text-5xl">Places I&apos;ve Been</h2>
               <p className="mb-16 text-base text-muted-foreground md:text-lg">The world is big. I&apos;m working on it.</p>
             </div>
           </div>
-          <div className="relative w-full" style={{ minHeight: 620 }}>
+          {/* Mobile: hover reveal cards */}
+          <div className="md:hidden px-4">
+            <HoverRevealCards items={[
+              { id: "malta", title: "Valletta", subtitle: "Malta", imageUrl: "/images/travel/malta.jpg" },
+              { id: "peru", title: "Rainbow Mountains", subtitle: "Peru", imageUrl: "/images/travel/peru.jpg" },
+              { id: "uruguay", title: "Colonia del Sacramento", subtitle: "Uruguay", imageUrl: "/images/travel/uruguay.jpg" },
+              { id: "indonesia", title: "Ubud", subtitle: "Indonesia", imageUrl: "/images/travel/indonesia.jpg" },
+            ]} />
+          </div>
+
+          {/* Desktop: globe + floating photos */}
+          <div className="relative hidden md:block w-full lg:overflow-hidden" style={{ minHeight: 620 }}>
             {/* Globe centered */}
-            <div className="w-full max-w-lg mx-auto relative z-10">
+            <div className="relative z-10 mx-auto flex justify-center">
               <Globe markers={travelMarkers} />
             </div>
 
@@ -228,6 +239,7 @@ export default function Home() {
         <section id="contact" className="bg-transparent">
           <Contact />
         </section>
+        <MobileThemeToggle />
       </main>
     </div>
   );

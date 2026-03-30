@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { Timeline } from '@/components/ui/timeline';
 
 type Experience = {
   id: string;
@@ -64,6 +65,7 @@ function DockDot({
   const ref = React.useRef<HTMLDivElement>(null);
   const [hovered, setHovered] = React.useState(false);
 
+
   const distance = useTransform(mouseX, (val) => {
     const bounds = ref.current?.getBoundingClientRect() ?? { x: 0, width: 0 };
     return val - bounds.x - bounds.width / 2;
@@ -75,11 +77,17 @@ function DockDot({
   );
 
   return (
-    <div className="relative flex flex-col items-center" onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
+    <div
+      className="relative flex flex-col items-center"
+      onPointerEnter={(e) => { if (e.pointerType === 'mouse') setHovered(true); }}
+      onPointerLeave={(e) => { if (e.pointerType === 'mouse') setHovered(false); }}
+    >
       {/* Logo above dot */}
-      <div
-        className="absolute"
-        style={{ bottom: '100%', marginBottom: 23, pointerEvents: 'auto' }}
+      <button
+        type="button"
+        onClick={() => setHovered(h => !h)}
+        className="absolute appearance-none bg-transparent border-0 p-0"
+        style={{ bottom: '100%', marginBottom: 23 }}
       >
         <img
           src={hovered ? item.logo : (item.logoMono ?? item.logo)}
@@ -87,7 +95,7 @@ function DockDot({
           className={cn(!hovered && !item.logoMono && 'brightness-0 dark:invert transition-[filter] duration-200', !hovered && item.logoMono && 'dark:invert')}
           style={{ height: 50, width: 'auto', objectFit: 'contain', maxWidth: 'none' }}
         />
-      </div>
+      </button>
 
       {/* Dot */}
       <motion.div
@@ -110,16 +118,16 @@ function DockDot({
         {item.caption}
       </span>
 
-      {/* Hover card above */}
+      {/* Hover card — below timeline, to the right of dot */}
       <AnimatePresence>
         {hovered && (
           <motion.div
-            initial={{ opacity: 0, y: 6 }}
+            initial={{ opacity: 0, y: -4 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 6 }}
+            exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.15 }}
-            className="absolute z-50 top-1/2 w-52 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 shadow-2xl p-4 pointer-events-none"
-            style={{ left: '100%', marginLeft: 16, y: '-50%' }}
+            className="absolute z-50 w-52 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 shadow-2xl p-4 pointer-events-none"
+            style={{ top: 'calc(100% + 16px)', left: '50%' }}
           >
             <p className="text-[11px] text-zinc-400 dark:text-zinc-500 mb-1">{item.period}</p>
             <p className="font-semibold text-sm text-zinc-900 dark:text-zinc-100 leading-snug">{item.title}</p>
@@ -139,6 +147,30 @@ function DockDot({
   );
 }
 
+const mobileTimelineItems = [
+  {
+    date: '2025-01-01',
+    title: 'Program Manager · Canva',
+    items: ["Owns Canva's Premium Apps Program", "Product owner of Canva's Apps Marketplace"],
+    logo: '/logos/canva-black.png',
+    logoClassName: 'dark:invert scale-125 origin-left -ml-4',
+  },
+  {
+    date: '2023-01-01',
+    title: 'Senior Program Manager · Pinterest',
+    items: ['Managed $30M annual SMB sales team, beat quota 3x', 'Built AI email flow → +10% advertiser reply rate'],
+    logo: '/logos/pinterest.png',
+    logoClassName: 'brightness-0 dark:invert',
+  },
+  {
+    date: '2021-01-01',
+    title: 'Management Consultant · Accenture',
+    items: ['Business transformation for large tech firms', 'Big 4 Bank KYC remediation: 500k+ records'],
+    logo: '/logos/accenture.png',
+    logoClassName: 'brightness-0 dark:invert scale-150',
+  },
+];
+
 export default function ExperienceDock() {
   const mouseX = useMotionValue(Infinity);
 
@@ -149,14 +181,20 @@ export default function ExperienceDock() {
   }, []);
 
   return (
-    <div id="experience" className="flex justify-center">
+    <div id="experience">
+      {/* Mobile: timeline */}
+      <div className="md:hidden">
+        <Timeline items={mobileTimelineItems} initialCount={3} showAnimation={false} sortOrder="asc" />
+      </div>
+      {/* Desktop: dock */}
+      <div className="hidden md:flex justify-center">
       <div
-          className="relative w-[520px]"
+          className="relative w-[min(520px,82vw)]"
           onMouseMove={(e) => mouseX.set(e.clientX)}
           onMouseLeave={() => mouseX.set(Infinity)}
         >
           {/* Rail background */}
-          <div className="absolute h-[1.5px] top-0 z-0" style={{ left: -80, right: -80, transform: 'translateY(17px)' }}>
+          <div className="absolute h-[1.5px] top-0 z-0" style={{ left: 0, right: 0, transform: 'translateY(17px)' }}>
             <div className="h-full w-full bg-zinc-200 dark:bg-zinc-800" />
             {lastActiveIndex >= 0 && (
               <div
@@ -174,6 +212,7 @@ export default function ExperienceDock() {
               </li>
             ))}
           </ol>
+      </div>
       </div>
     </div>
   );

@@ -5,10 +5,10 @@ import { cn } from "@/lib/utils";
 import DarkModeToggle from "@/components/ui/dark-mode-toggle";
 
 const links = [
-  { label: "About", href: "#about" },
-  { label: "Projects", href: "#projects" },
-  { label: "Travel", href: "#travel" },
-  { label: "Contact", href: "#contact" },
+  { label: "About", short: "About", href: "#about" },
+  { label: "Projects", short: "Projects", href: "#projects" },
+  { label: "Travel", short: "Travel", href: "#travel" },
+  { label: "Contact", short: "Contact", href: "#contact" },
 ];
 
 export function Nav() {
@@ -71,7 +71,7 @@ export function Nav() {
     <header
       className={cn(
         "fixed top-5 left-1/2 -translate-x-1/2 z-50 transition-all duration-300",
-        "rounded-full border px-4 py-2",
+        "rounded-full border px-2 py-1.5 md:px-4 md:py-2",
         "bg-background/80 backdrop-blur-lg",
         scrolled ? "shadow-md" : "shadow-sm"
       )}
@@ -83,16 +83,17 @@ export function Nav() {
             href={link.href}
             onClick={(e) => handleClick(e, link.href)}
             className={cn(
-                "px-3 py-1.5 text-sm rounded-full hover:bg-muted transition-colors duration-150",
+                "px-2 py-1 text-xs md:px-3 md:py-1.5 md:text-sm rounded-full hover:bg-muted transition-colors duration-150",
                 active === link.href.slice(1)
                   ? "text-foreground underline underline-offset-[6px]"
                   : "text-muted-foreground hover:text-foreground"
               )}
           >
-            {link.label}
+            <span className="md:hidden">{link.short}</span>
+            <span className="hidden md:inline">{link.label}</span>
           </a>
         ))}
-        <div className="ml-2 flex items-center">
+        <div className="ml-2 hidden md:flex items-center">
           <DarkModeToggle />
         </div>
       </nav>

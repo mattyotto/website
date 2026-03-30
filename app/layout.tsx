@@ -41,7 +41,7 @@ export default function RootLayout({
       className={`${courierPrime.variable} ${spaceMono.variable} ${inter.variable}`}
     >
       <body className="min-h-screen bg-background text-foreground antialiased">
-        <ThemeProvider attribute="class" defaultTheme="light">
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {children}
         </ThemeProvider>
       </body>

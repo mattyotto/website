@@ -65,7 +65,47 @@ export interface TimeLine_01Props {
   firstCardMarginLeft?: number;
 }
 
-function ImageCarousel({ images, title }: { images: string[]; title: string }) {
+const SLIDE_MS = 3200;
+
+function ScrollSlideshow({ images, title }: { images: string[]; title: string }) {
+  const label = (src: string) => src.includes('before') ? 'Before' : src.includes('after') ? 'After' : null;
+
+  return (
+    <div className="relative mb-4 w-full rounded-lg overflow-hidden">
+      <div
+        className="flex overflow-x-auto h-64 rounded-lg"
+        style={{
+          scrollSnapType: 'x mandatory',
+          scrollbarWidth: 'none',
+          msOverflowStyle: 'none',
+          WebkitOverflowScrolling: 'touch',
+        } as React.CSSProperties}
+      >
+        {images.map((src, i) => (
+          <div
+            key={i}
+            className="relative flex-shrink-0 w-full h-full"
+            style={{ scrollSnapAlign: 'start' }}
+          >
+            <img src={src} alt={`${title} ${i + 1}`} className="w-full h-full object-cover" loading="lazy" />
+            {label(src) && (
+              <span className="absolute top-3 right-3 px-2.5 py-0.5 rounded-full bg-black/60 text-white text-[10px] font-medium tracking-widest uppercase backdrop-blur-sm">
+                {label(src)}
+              </span>
+            )}
+          </div>
+        ))}
+      </div>
+      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 pointer-events-none">
+        {images.map((_, i) => (
+          <div key={i} className="w-1.5 h-1.5 rounded-full bg-white/50" />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function DesktopImageCarousel({ images, title }: { images: string[]; title: string }) {
   const [idx, setIdx] = React.useState(0);
   return (
     <div className="relative mb-4 w-full h-72 rounded-lg overflow-hidden group">
@@ -73,7 +113,7 @@ function ImageCarousel({ images, title }: { images: string[]; title: string }) {
         key={idx}
         src={images[idx]}
         alt={`${title} ${idx + 1}`}
-        className="w-full h-full object-cover transition-opacity duration-300"
+        className="w-full h-full object-cover"
         loading="lazy"
       />
       {(images[idx].includes('before') || images[idx].includes('after')) && (
@@ -81,33 +121,70 @@ function ImageCarousel({ images, title }: { images: string[]; title: string }) {
           {images[idx].includes('before') ? 'Before' : 'After'}
         </span>
       )}
-      {/* Prev */}
       {idx > 0 && (
         <button
-          onClick={() => setIdx(i => i - 1)}
-          className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white rounded-full w-8 h-8 flex items-center justify-center transition-opacity opacity-0 group-hover:opacity-100"
+          onPointerDown={(e) => { e.stopPropagation(); setIdx(i => i - 1); }}
+          className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/60 text-white rounded-full w-8 h-8 flex items-center justify-center text-lg opacity-0 group-hover:opacity-100 transition-opacity"
           aria-label="Previous"
-        >
-          ‹
-        </button>
+        >‹</button>
       )}
-      {/* Next */}
       {idx < images.length - 1 && (
         <button
-          onClick={() => setIdx(i => i + 1)}
-          className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white rounded-full w-8 h-8 flex items-center justify-center transition-opacity opacity-0 group-hover:opacity-100"
+          onPointerDown={(e) => { e.stopPropagation(); setIdx(i => i + 1); }}
+          className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/60 text-white rounded-full w-8 h-8 flex items-center justify-center text-lg opacity-0 group-hover:opacity-100 transition-opacity"
           aria-label="Next"
-        >
-          ›
-        </button>
+        >›</button>
       )}
-      {/* Dots */}
       <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">
         {images.map((_, i) => (
-          <button
+          <button key={i} onPointerDown={() => setIdx(i)}
+            className={`rounded-full transition-all ${i === idx ? 'w-4 h-1.5 bg-white' : 'w-1.5 h-1.5 bg-white/50'}`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function AutoSlideshow({ images, title }: { images: string[]; title: string }) {
+  const [idx, setIdx] = React.useState(0);
+  const startRef = React.useRef<number | null>(null);
+  const rafRef = React.useRef<number>(0);
+
+  React.useEffect(() => {
+    const tick = (ts: number) => {
+      if (startRef.current === null) startRef.current = ts;
+      if (ts - startRef.current >= SLIDE_MS) {
+        startRef.current = ts;
+        setIdx(i => (i + 1) % images.length);
+      }
+      rafRef.current = requestAnimationFrame(tick);
+    };
+    rafRef.current = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafRef.current);
+  }, [images.length]);
+
+  const label = images[idx].includes('before') ? 'Before' : images[idx].includes('after') ? 'After' : null;
+
+  return (
+    <div className="relative mb-4 w-full h-72 rounded-lg overflow-hidden bg-black">
+      <img
+        key={idx}
+        src={images[idx]}
+        alt={`${title} ${idx + 1}`}
+        className="w-full h-full object-cover"
+        loading="lazy"
+      />
+      {label && (
+        <span className="absolute top-3 right-3 px-2.5 py-0.5 rounded-full bg-black/60 text-white text-[10px] font-medium tracking-widest uppercase backdrop-blur-sm">
+          {label}
+        </span>
+      )}
+      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">
+        {images.map((_, i) => (
+          <div
             key={i}
-            onClick={() => setIdx(i)}
-            className={`w-1.5 h-1.5 rounded-full transition-all ${i === idx ? 'bg-white scale-125' : 'bg-white/50'}`}
+            className={`rounded-full transition-all duration-300 ${i === idx ? 'w-4 h-1.5 bg-white' : 'w-1.5 h-1.5 bg-white/50'}`}
           />
         ))}
       </div>
@@ -272,7 +349,7 @@ export default function TimeLine_01({
 
   return (
     <section className="pt-20 pb-12" onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
-      <div className="container">
+      <div className="container px-4">
         <div className="mx-auto max-w-3xl">
           <h1 className="mb-4 text-3xl font-bold tracking-tight md:text-5xl">
             {title}
@@ -285,7 +362,27 @@ export default function TimeLine_01({
         </div>
       </div>
 
-      <div className="relative mt-8 md:mt-10">
+      {/* Mobile: vertical stack */}
+      <div className="md:hidden px-4 mt-8 flex flex-col gap-4">
+        {entries.map((entry, index) => (
+          <article key={index} className="rounded-2xl border p-3 border-gray-50 dark:border-gray-800 bg-gray-50 dark:bg-black shadow-lg">
+            {entry.video ? (
+              <video src={entry.video} className="mb-4 w-full h-56 rounded-lg object-cover" autoPlay muted loop playsInline />
+            ) : entry.images && entry.images.length > 0 ? (
+              <ScrollSlideshow images={entry.images} title={entry.title} />
+            ) : entry.image && (
+              <img src={entry.image} alt={`${entry.title} visual`} className="mb-4 w-full h-56 rounded-lg object-cover" loading="lazy" />
+            )}
+            <div className="space-y-2">
+              <h2 className="text-md font-medium leading-tight tracking-tight text-foreground">{entry.title}</h2>
+              <p className="text-xs leading-relaxed text-muted-foreground">{entry.description}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      {/* Desktop: horizontal carousel */}
+      <div className="relative mt-8 md:mt-10 hidden md:block">
         {/* Prev arrow */}
         <button
           onClick={() => scroll('prev')}
@@ -356,7 +453,7 @@ export default function TimeLine_01({
                       playsInline
                     />
                   ) : entry.images && entry.images.length > 0 ? (
-                    <ImageCarousel images={entry.images} title={entry.title} />
+                    <DesktopImageCarousel images={entry.images} title={entry.title} />
                   ) : entry.image && (
                     <img
                       src={entry.image}

@@ -52,13 +52,17 @@ export function PageGridBackground() {
 
   return (
     <div className="fixed inset-0 z-0 pointer-events-none">
-      {/* Faint base grid */}
+      {/* Faint base grid — always visible */}
       <div className="absolute inset-0 opacity-[0.04]">
         <GridPattern offsetX={gridOffsetX} offsetY={gridOffsetY} />
       </div>
-      {/* Cursor-revealed grid */}
+      {/* Mobile: full grid at moderate opacity */}
+      <div className="absolute inset-0 opacity-[0.15] md:hidden">
+        <GridPattern offsetX={gridOffsetX} offsetY={gridOffsetY} />
+      </div>
+      {/* Desktop: cursor-revealed grid */}
       <motion.div
-        className="absolute inset-0 opacity-40"
+        className="absolute inset-0 opacity-40 hidden md:block"
         style={{ maskImage, WebkitMaskImage: maskImage }}
       >
         <GridPattern offsetX={gridOffsetX} offsetY={gridOffsetY} />

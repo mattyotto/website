@@ -56,7 +56,7 @@ export const Component = () => {
       </motion.div>
 
 
-      <div className="relative z-10 flex flex-col items-center text-center px-4 max-w-3xl mx-auto space-y-6 pointer-events-none mt-64">
+      <div className="relative z-10 flex flex-col items-center text-center px-4 max-w-3xl mx-auto space-y-6 pointer-events-none mt-20 md:mt-64">
         <div className="space-y-4">
           <h1 className="text-6xl md:text-8xl font-extrabold tracking-tight text-foreground drop-shadow-sm">
             Matty Giuffre

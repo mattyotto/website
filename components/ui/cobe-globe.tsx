@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useCallback, useState } from "react"
+import { useEffect, useRef, useCallback, useState, useLayoutEffect } from "react"
 import createGlobe from "cobe"
 
 interface Marker {
@@ -55,7 +55,10 @@ export function Globe({
   diffuse = 1.5,
   mapSamples = 16000,
 }: GlobeProps) {
+  const wrapperRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const [size, setSize] = useState(0)
+  const [visible, setVisible] = useState(false)
   const pointerInteracting = useRef<{ x: number; y: number } | null>(null)
   const lastPointer = useRef<{ x: number; y: number; t: number } | null>(null)
   const dragOffset = useRef({ phi: 0, theta: 0 })
@@ -117,23 +120,22 @@ export function Globe({
     }
   }, [handlePointerMove, handlePointerUp])
 
-
+  // Single effect: measure + create globe
   useEffect(() => {
-    if (!canvasRef.current) return
     const canvas = canvasRef.current
-    let globe: ReturnType<typeof createGlobe> | null = null
-    let animationId: number
+    if (!canvas) return
+
+    const w = Math.min(window.innerWidth - 32, 512)
+    // Set canvas dimensions imperatively — bypasses React state entirely
+    canvas.style.width = `${w}px`
+    canvas.style.height = `${w}px`
+
     let phi = 0
-
-    function init() {
-      const width = canvas.offsetWidth
-      if (width === 0 || globe) return
-
-      const dpr = Math.min(window.devicePixelRatio || 1, 2)
-      globe = createGlobe(canvas, {
-        devicePixelRatio: dpr,
-        width,
-        height: width,
+    const dpr = Math.min(window.devicePixelRatio || 1, 2)
+    const globe = createGlobe(canvas, {
+      devicePixelRatio: dpr,
+      width: w,
+      height: w,
       phi: 0,
       theta,
       dark,
@@ -160,29 +162,28 @@ export function Globe({
       opacity: 0.7,
     })
 
+    let animationId: number
     function animate() {
       if (!isPausedRef.current) {
-        {
-          phi += speed
-          if (
-            Math.abs(velocity.current.phi) > 0.0001 ||
-            Math.abs(velocity.current.theta) > 0.0001
-          ) {
-            phiOffsetRef.current += velocity.current.phi
-            thetaOffsetRef.current += velocity.current.theta
-            velocity.current.phi *= 0.95
-            velocity.current.theta *= 0.95
-          }
-          const thetaMin = -0.4,
-            thetaMax = 0.4
-          if (thetaOffsetRef.current < thetaMin) {
-            thetaOffsetRef.current += (thetaMin - thetaOffsetRef.current) * 0.1
-          } else if (thetaOffsetRef.current > thetaMax) {
-            thetaOffsetRef.current += (thetaMax - thetaOffsetRef.current) * 0.1
-          }
+        phi += speed
+        if (
+          Math.abs(velocity.current.phi) > 0.0001 ||
+          Math.abs(velocity.current.theta) > 0.0001
+        ) {
+          phiOffsetRef.current += velocity.current.phi
+          thetaOffsetRef.current += velocity.current.theta
+          velocity.current.phi *= 0.95
+          velocity.current.theta *= 0.95
+        }
+        const thetaMin = -0.4,
+          thetaMax = 0.4
+        if (thetaOffsetRef.current < thetaMin) {
+          thetaOffsetRef.current += (thetaMin - thetaOffsetRef.current) * 0.1
+        } else if (thetaOffsetRef.current > thetaMax) {
+          thetaOffsetRef.current += (thetaMax - thetaOffsetRef.current) * 0.1
         }
       }
-      globe!.update({
+      globe.update({
         phi: phi + phiOffsetRef.current + dragOffset.current.phi,
         theta: theta + thetaOffsetRef.current + dragOffset.current.theta,
         dark,
@@ -204,41 +205,27 @@ export function Globe({
       })
       animationId = requestAnimationFrame(animate)
     }
-      animate()
-      setTimeout(() => canvas && (canvas.style.opacity = "1"))
-    }
-
-    if (canvas.offsetWidth > 0) {
-      init()
-    } else {
-      const ro = new ResizeObserver((entries) => {
-        if (entries[0]?.contentRect.width > 0) {
-          ro.disconnect()
-          init()
-        }
-      })
-      ro.observe(canvas)
-    }
+    animate()
+    setTimeout(() => { canvas.style.opacity = '1' }, 200)
 
     return () => {
-      if (animationId) cancelAnimationFrame(animationId)
-      if (globe) globe.destroy()
+      cancelAnimationFrame(animationId)
+      globe.destroy()
     }
   }, [markers, arcs, markerColor, baseColor, arcColor, glowColor, dark, mapBrightness, markerSize, markerElevation, arcWidth, arcHeight, speed, theta, diffuse, mapSamples])
 
   return (
-    <div className={`relative aspect-square select-none ${className}`}>
+    <div ref={wrapperRef} className={`relative select-none mx-auto ${className}`}>
       <canvas
         ref={canvasRef}
         onPointerDown={handlePointerDown}
         style={{
-          width: "100%",
-          height: "100%",
           cursor: "grab",
           opacity: 0,
           transition: "opacity 1.2s ease",
           borderRadius: "50%",
           touchAction: "none",
+          display: "block",
         }}
       />
       {markers.map((m) => (

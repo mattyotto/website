@@ -71,19 +71,19 @@ const projects: TimeLine_01Entry[] = [
       "/images/reno/after-bedroom.jpg",
     ],
   },
-    {
-    icon: Clock,
-    title: "Coming Soon",
-    subtitle: "Work in Progress",
-    description: "Something new is in the works. Check back soon.",
-    images: [],
-  },
   {
+    icon: Clock,
+    title: "This Website",
+    subtitle: "mattygiuffre.com",
+    description: "Built with Next.js, Claude Code, and a lot of late nights. Hosted on Cloudflare. You're looking at it.",
+    video: "/videos/website-video.mp4",
+  },
+{
     icon: Clock,
     title: "Coming Soon",
     subtitle: "Work in Progress",
     description: "Another project on the way. Stay tuned.",
-    images: [],
+    images: ["https://placehold.co/600x400"],
   },
 ];
 

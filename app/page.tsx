@@ -4,7 +4,7 @@ import { Component as InfiniteGrid } from "@/components/ui/the-infinite-grid";
 import { MagicText } from "@/components/ui/magic-text";
 import { PageGridBackground } from "@/components/ui/page-grid-background";
 import TimeLine_01, { type TimeLine_01Entry } from "@/components/ui/release-time-line";
-import { Package, Sparkles, Zap } from "lucide-react";
+import { Package, Sparkles } from "lucide-react";
 import { Globe } from "@/components/ui/cobe-globe";
 import Contact from "@/components/ui/contact-sections";
 import { Nav } from "@/components/ui/nav";
@@ -76,13 +76,6 @@ const projects: TimeLine_01Entry[] = [
       "/images/reno/after-kitchen.jpg",
       "/images/reno/after-bedroom.jpg",
     ],
-  },
-  {
-    icon: Zap,
-    title: "n8n Automations",
-    subtitle: "Ops & Workflow Automation",
-    description: "I build n8n workflows to automate operations and work processes. This one pipes every new app release from Canva's marketplace directly into Slack — no manual monitoring needed.",
-    video: "/videos/n8nworkflow.mp4",
   },
 ];
 

@@ -4,7 +4,7 @@ import { Component as InfiniteGrid } from "@/components/ui/the-infinite-grid";
 import { MagicText } from "@/components/ui/magic-text";
 import { PageGridBackground } from "@/components/ui/page-grid-background";
 import TimeLine_01, { type TimeLine_01Entry } from "@/components/ui/release-time-line";
-import { Package, Sparkles } from "lucide-react";
+import { Sparkles, Clock } from "lucide-react";
 import { Globe } from "@/components/ui/cobe-globe";
 import Contact from "@/components/ui/contact-sections";
 import { Nav } from "@/components/ui/nav";
@@ -70,6 +70,20 @@ const projects: TimeLine_01Entry[] = [
       "/images/reno/after-kitchen.jpg",
       "/images/reno/after-bedroom.jpg",
     ],
+  },
+    {
+    icon: Clock,
+    title: "Coming Soon",
+    subtitle: "Work in Progress",
+    description: "Something new is in the works. Check back soon.",
+    images: [],
+  },
+  {
+    icon: Clock,
+    title: "Coming Soon",
+    subtitle: "Work in Progress",
+    description: "Another project on the way. Stay tuned.",
+    images: [],
   },
 ];
 

@@ -10,7 +10,7 @@ export default function Contact() {
             desc: "Connect with me.",
             link: {
                 name: "View profile",
-                href: "https://linkedin.com/in/matthew-giuffre"
+                href: "https://linkedin.com/in/matthewgiuffre"
             },
         },
         {

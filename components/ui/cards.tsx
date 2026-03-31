@@ -42,7 +42,7 @@ const HoverRevealCards: React.FC<HoverRevealCardsProps> = ({
           )}
           style={{ backgroundImage: `url(${item.imageUrl})` }}
         >
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
           <div className="absolute bottom-0 left-0 p-3 text-white">
             <p className="text-[9px] font-light uppercase tracking-widest opacity-80">
               {item.subtitle}

@@ -69,10 +69,12 @@ const projects: TimeLine_01Entry[] = [
     subtitle: "Darlinghurst, Sydney",
     description: "Turned a 19th century horse stable in Darlinghurst, Sydney into a one bedroom loft apartment. The sandstone walls and exposed timber rafters stayed. Everything else got a revamp.",
     images: [
-      "/images/reno/before-living-room.jpg",
       "/images/reno/before-exterior.jpg",
+      "/images/reno/before-bedroom.jpg",
       "/images/reno/after-living-room.jpg",
       "/images/reno/after-stair.jpg",
+      "/images/reno/after-kitchen.jpg",
+      "/images/reno/after-bedroom.jpg",
     ],
   },
   {

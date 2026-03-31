@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
-import DarkModeToggle from "@/components/ui/dark-mode-toggle";
 
 const links = [
   { label: "About", short: "About", href: "#about" },
@@ -93,9 +92,6 @@ export function Nav() {
             <span className="hidden md:inline">{link.label}</span>
           </a>
         ))}
-        <div className="ml-2 hidden md:flex items-center">
-          <DarkModeToggle />
-        </div>
       </nav>
     </header>
   );

@@ -51,7 +51,7 @@ const experiences: Experience[] = [
     title: 'Program Manager',
     org: 'Canva',
     period: '2025 – Present',
-    bullets: ["Owner of Canva's Premium Apps Program", "Product Manager for Canva's Apps Marketplace"],
+    bullets: ["Owner of Canva's Premium Apps Program", "Interim PM for Canva's Apps Marketplace"],
   },
 ];
 

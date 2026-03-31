@@ -75,7 +75,7 @@ const projects: TimeLine_01Entry[] = [
     icon: Clock,
     title: "This Website",
     subtitle: "mattygiuffre.com",
-    description: "Built with Next.js, Claude Code, and a lot of late nights. Hosted on Cloudflare. You're looking at it.",
+    description: "Built with Next.js, Claude Code, and a lot of late nights. Hosted on Vercel. You're looking at it.",
     video: "/videos/website-video.mp4",
   },
 {
@@ -83,7 +83,7 @@ const projects: TimeLine_01Entry[] = [
     title: "Coming Soon",
     subtitle: "Work in Progress",
     description: "Another project on the way. Stay tuned.",
-    images: ["https://placehold.co/600x400"],
+    images: ["https://placehold.co/800x450/e2e8f0/94a3b8?text=Coming+Soon"],
   },
 ];
 

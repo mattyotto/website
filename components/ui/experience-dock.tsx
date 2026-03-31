@@ -51,7 +51,7 @@ const experiences: Experience[] = [
     title: 'Program Manager',
     org: 'Canva',
     period: '2025 – Present',
-    bullets: ["Product Manager for Canva's Apps Marketplace"],
+    bullets: ["Owner of Canva's Premium Apps Program", "Product Manager for Canva's Apps Marketplace"],
   },
 ];
 
@@ -151,7 +151,7 @@ const mobileTimelineItems = [
   {
     date: '2025-01-01',
     title: 'Program Manager · Canva',
-    items: ["Product Manager for Canva's Apps Marketplace"],
+    items: ["Owner of Canva's Premium Apps Program", "Product Manager for Canva's Apps Marketplace"],
     logo: '/logos/canva-black.png',
     logoClassName: 'dark:invert scale-125 origin-left -ml-4',
   },

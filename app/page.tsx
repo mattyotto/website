@@ -56,13 +56,7 @@ function PhotoCard({ src, label, width, height }: { src: string; label: string; 
 }
 
 const projects: TimeLine_01Entry[] = [
-  {
-    icon: Package,
-    title: "Canva App Explorer",
-    subtitle: "Canva · Internal Tool",
-    description: "Allows internal Canva employees to easily access the library of app icons for the Apps Marketplace. Built on Canva's Apps SDK and runs from a Cloudflare Worker endpoint.",
-    video: "/videos/AppExplorerDemo.mp4",
-  },
+
   {
     icon: Sparkles,
     title: "Renovation Project",

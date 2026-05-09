@@ -60,7 +60,7 @@ const projects: TimeLine_01Entry[] = [
     icon: Clock,
     title: "Music Embed Canva App",
     subtitle: "Canva App",
-    description: "Embed Spotify music directly into your Canva design.",
+    description: "Embed Spotify music directly into your Canva design. Powered by a Cloudflare Worker that calls the Spotify API — search songs, playlists, albums, and artists without leaving Canva.",
     video: "/videos/musicembed.mp4",
   },
   {
@@ -70,6 +70,7 @@ const projects: TimeLine_01Entry[] = [
     description: "My dev brand — where I build and release public apps and projects. This website is one of them.",
     images: ["/images/labomba.png"],
     imageFit: 'contain',
+    button: { url: "https://labomba.dev", text: "Visit LA BOMBA.dev" },
   },
   {
     icon: Sparkles,

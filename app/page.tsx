@@ -74,7 +74,7 @@ const projects: TimeLine_01Entry[] = [
   },
   {
     icon: Sparkles,
-    title: "Renovation Project",
+    title: "Horse Stable to House",
     subtitle: "Darlinghurst, Sydney",
     description: "Turned a 19th century horse stable in Darlinghurst, Sydney into a one bedroom loft apartment. The sandstone walls and exposed timber rafters stayed. Everything else got a revamp.",
     images: [

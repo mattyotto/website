@@ -376,7 +376,14 @@ export default function TimeLine_01({
               <img src={entry.image} alt={`${entry.title} visual`} className="mb-4 w-full h-56 rounded-lg object-cover" loading="lazy" />
             )}
             <div className="space-y-2">
-              <h2 className="text-md font-medium leading-tight tracking-tight text-foreground">{entry.title}</h2>
+              <h2 className="text-md font-medium leading-tight tracking-tight text-foreground">
+                {entry.url ? (
+                  <a href={entry.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 hover:underline">
+                    {entry.title}
+                    <ArrowUpRight className="w-4 h-4 shrink-0 text-muted-foreground" />
+                  </a>
+                ) : entry.title}
+              </h2>
               <p className="text-xs leading-relaxed text-muted-foreground">{entry.description}</p>
             </div>
           </article>

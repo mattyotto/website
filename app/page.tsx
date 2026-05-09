@@ -58,7 +58,7 @@ function PhotoCard({ src, label, width, height }: { src: string; label: string; 
 const projects: TimeLine_01Entry[] = [
   {
     icon: Clock,
-    title: "Music Embed Canva App",
+    title: "Music Embed App",
     subtitle: "Canva App",
     description: "Embed Spotify music directly into your Canva design. Powered by a Cloudflare Worker that calls the Spotify API — search songs, playlists, albums, and artists without leaving Canva.",
     video: "/videos/musicembed.mp4",

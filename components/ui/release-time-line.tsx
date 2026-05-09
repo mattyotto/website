@@ -51,6 +51,7 @@ export type TimeLine_01Entry = {
   image?: string;
   images?: string[];
   video?: string;
+  imageFit?: 'cover' | 'contain';
   button?: {
     url: string;
     text: string;
@@ -105,7 +106,7 @@ function ScrollSlideshow({ images, title }: { images: string[]; title: string })
   );
 }
 
-function DesktopImageCarousel({ images, title }: { images: string[]; title: string }) {
+function DesktopImageCarousel({ images, title, imageFit = 'cover' }: { images: string[]; title: string; imageFit?: 'cover' | 'contain' }) {
   const [idx, setIdx] = React.useState(0);
   return (
     <div className="relative mb-4 w-full h-72 rounded-lg overflow-hidden group">
@@ -113,7 +114,7 @@ function DesktopImageCarousel({ images, title }: { images: string[]; title: stri
         key={idx}
         src={images[idx]}
         alt={`${title} ${idx + 1}`}
-        className="w-full h-full object-cover"
+        className={`w-full h-full ${imageFit === 'contain' ? 'object-contain' : 'object-cover'}`}
         loading="lazy"
       />
       {(images[idx].includes('before') || images[idx].includes('after')) && (
@@ -453,7 +454,7 @@ export default function TimeLine_01({
                       playsInline
                     />
                   ) : entry.images && entry.images.length > 0 ? (
-                    <DesktopImageCarousel images={entry.images} title={entry.title} />
+                    <DesktopImageCarousel images={entry.images} title={entry.title} imageFit={entry.imageFit} />
                   ) : entry.image && (
                     <img
                       src={entry.image}

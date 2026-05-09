@@ -56,7 +56,21 @@ function PhotoCard({ src, label, width, height }: { src: string; label: string; 
 }
 
 const projects: TimeLine_01Entry[] = [
-
+  {
+    icon: Clock,
+    title: "Music Embed Canva App",
+    subtitle: "Canva App",
+    description: "Embed Spotify music directly into your Canva design.",
+    video: "/videos/musicembed.mp4",
+  },
+  {
+    icon: Sparkles,
+    title: "LA BOMBA.dev",
+    subtitle: "labomba.dev",
+    description: "My dev brand — where I build and release public apps and projects. This website is one of them.",
+    images: ["/images/labomba.png"],
+    imageFit: 'contain',
+  },
   {
     icon: Sparkles,
     title: "Renovation Project",
@@ -70,20 +84,6 @@ const projects: TimeLine_01Entry[] = [
       "/images/reno/after-kitchen.jpg",
       "/images/reno/after-bedroom.jpg",
     ],
-  },
-  {
-    icon: Clock,
-    title: "This Website",
-    subtitle: "mattygiuffre.com",
-    description: "Built with Next.js, Claude Code, and a lot of late nights. Hosted on Vercel. You're looking at it.",
-    video: "/videos/website-video.mp4",
-  },
-{
-    icon: Clock,
-    title: "Coming Soon",
-    subtitle: "Work in Progress",
-    description: "Another project on the way. Stay tuned.",
-    images: ["https://placehold.co/800x450/e2e8f0/94a3b8?text=Coming+Soon"],
   },
 ];
 

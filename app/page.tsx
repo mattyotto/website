@@ -70,7 +70,7 @@ const projects: TimeLine_01Entry[] = [
     description: "My dev brand — where I build and release public apps and projects. This website is one of them.",
     images: ["/images/labomba.png"],
     imageFit: 'contain',
-    button: { url: "https://labomba.dev", text: "Visit LA BOMBA.dev" },
+    url: "https://labomba.dev",
   },
   {
     icon: Sparkles,

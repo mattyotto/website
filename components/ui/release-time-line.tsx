@@ -52,6 +52,7 @@ export type TimeLine_01Entry = {
   images?: string[];
   video?: string;
   imageFit?: 'cover' | 'contain';
+  url?: string;
   button?: {
     url: string;
     text: string;
@@ -472,8 +473,8 @@ export default function TimeLine_01({
                           "text-foreground"
                         }
                       >
-                        {entry.button ? (
-                          <a href={entry.button.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 hover:underline">
+                        {entry.url ? (
+                          <a href={entry.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 hover:underline">
                             {entry.title}
                             <ArrowUpRight className="w-4 h-4 shrink-0 text-muted-foreground" />
                           </a>

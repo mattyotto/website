@@ -472,7 +472,12 @@ export default function TimeLine_01({
                           "text-foreground"
                         }
                       >
-                        {entry.title}
+                        {entry.button ? (
+                          <a href={entry.button.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 hover:underline">
+                            {entry.title}
+                            <ArrowUpRight className="w-4 h-4 shrink-0 text-muted-foreground" />
+                          </a>
+                        ) : entry.title}
                       </h2>
 
                       {/* Improved description with better spacing */}

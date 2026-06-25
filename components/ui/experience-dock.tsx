@@ -48,10 +48,10 @@ const experiences: Experience[] = [
     logoAlt: 'Canva',
     caption: '2025',
     active: true,
-    title: 'Program Manager',
+    title: 'Product Manager',
     org: 'Canva',
     period: '2025 – Present',
-    bullets: ["Manage Canva's Premium Apps Program", "Interim PM for Canva's Apps Marketplace"],
+    bullets: ["Define and develop APIs for Canva's SDK, powering third-party integrations and internal AI-native products"],
   },
 ];
 

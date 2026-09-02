@@ -62,7 +62,7 @@ export const Component = () => {
             Matty Giuffre
           </h1>
           <p className="text-2xl md:text-3xl text-muted-foreground">
-            Product. Ops. Builder.
+            Product. Strategy. Builder.
           </p>
         </div>
       </div>

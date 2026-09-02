@@ -146,7 +146,7 @@ export default function Home() {
         </div>
         <section id="about" className="py-20 px-4 bg-transparent flex items-center justify-center">
           <div className="max-w-4xl mx-auto w-full">
-            <MagicText text="👋 I'm Matty. I bridge product, data, and delivery. Six years in tech. I care about simple things that work — clean interfaces, smart automations and shipping stuff that matters." />
+            <MagicText text="👋 I'm Matty. I bridge product, data, and delivery. Six years in tech. I care about simple things that work: clean interfaces, smart automations and shipping stuff that matters." />
             <div className="mt-52">
               <ExperienceDock />
             </div>

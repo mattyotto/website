@@ -67,126 +67,93 @@ export interface TimeLine_01Props {
   firstCardMarginLeft?: number;
 }
 
-const SLIDE_MS = 3200;
+function mediaAlt(src: string, index: number): string {
+  const file = src.split("/").pop()?.split(".")[0] ?? "";
+  if (file.includes("before") || file.includes("after")) {
+    const state = file.includes("before") ? "Before" : "After";
+    const rest = file.replace(/^before-/, "").replace(/^after-/, "").replace(/-/g, " ");
+    return rest ? `${state}, ${rest}` : state;
+  }
+  return `Photo ${index + 1}`;
+}
 
-function ScrollSlideshow({ images, title }: { images: string[]; title: string }) {
-  const label = (src: string) => src.includes('before') ? 'Before' : src.includes('after') ? 'After' : null;
+function ResponsiveGallery({ images, imageFit = "cover" }: { images: string[]; imageFit?: "cover" | "contain" }) {
+  const scrollerRef = useRef<HTMLDivElement>(null);
+  const [idx, setIdx] = useState(0);
+
+  const go = (next: number) => {
+    const el = scrollerRef.current;
+    const clamped = Math.max(0, Math.min(images.length - 1, next));
+    setIdx(clamped);
+    if (!el) return;
+    el.scrollTo({ left: clamped * el.clientWidth, behavior: "auto" });
+  };
+
+  const label = (src: string) => (src.includes("before") ? "Before" : src.includes("after") ? "After" : null);
 
   return (
-    <div className="relative mb-4 w-full rounded-lg overflow-hidden">
+    <div className="group relative mb-4 w-full overflow-hidden rounded-lg">
       <div
-        className="flex overflow-x-auto h-64 rounded-lg"
+        ref={scrollerRef}
+        className="flex h-64 overflow-x-auto rounded-lg md:h-72 md:[scrollbar-width:none] md:[&::-webkit-scrollbar]:hidden"
         style={{
-          scrollSnapType: 'x mandatory',
-          scrollbarWidth: 'none',
-          msOverflowStyle: 'none',
-          WebkitOverflowScrolling: 'touch',
+          scrollSnapType: "x mandatory",
+          scrollbarWidth: "none",
+          msOverflowStyle: "none",
+          WebkitOverflowScrolling: "touch",
         } as React.CSSProperties}
       >
         {images.map((src, i) => (
           <div
-            key={i}
-            className="relative flex-shrink-0 w-full h-full"
-            style={{ scrollSnapAlign: 'start' }}
+            key={`${src}-${i}`}
+            className="relative h-full w-full flex-shrink-0"
+            style={{ scrollSnapAlign: "start" }}
           >
-            <img src={src} alt={`${title} ${i + 1}`} className="w-full h-full object-cover" loading="lazy" />
+            <img
+              src={src}
+              alt={mediaAlt(src, i)}
+              className={`h-full w-full object-cover ${imageFit === "contain" ? "md:object-contain" : ""}`}
+              loading="lazy"
+            />
             {label(src) && (
-              <span className="absolute top-3 right-3 px-2.5 py-0.5 rounded-full bg-black/60 text-white text-[10px] font-medium tracking-widest uppercase backdrop-blur-sm">
+              <span className="absolute top-3 right-3 rounded-full bg-black/60 px-2.5 py-0.5 text-[10px] font-medium tracking-widest text-white uppercase backdrop-blur-sm">
                 {label(src)}
               </span>
             )}
           </div>
         ))}
       </div>
-      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 pointer-events-none">
+
+      <div className="pointer-events-none absolute bottom-2 left-1/2 flex -translate-x-1/2 gap-1.5 md:hidden">
         {images.map((_, i) => (
-          <div key={i} className="w-1.5 h-1.5 rounded-full bg-white/50" />
+          <div key={i} className="h-1.5 w-1.5 rounded-full bg-white/50" />
         ))}
       </div>
-    </div>
-  );
-}
 
-function DesktopImageCarousel({ images, title, imageFit = 'cover' }: { images: string[]; title: string; imageFit?: 'cover' | 'contain' }) {
-  const [idx, setIdx] = React.useState(0);
-  return (
-    <div className="relative mb-4 w-full h-72 rounded-lg overflow-hidden group">
-      <img
-        key={idx}
-        src={images[idx]}
-        alt={`${title} ${idx + 1}`}
-        className={`w-full h-full ${imageFit === 'contain' ? 'object-contain' : 'object-cover'}`}
-        loading="lazy"
-      />
-      {(images[idx].includes('before') || images[idx].includes('after')) && (
-        <span className="absolute top-3 right-3 px-2.5 py-0.5 rounded-full bg-black/60 text-white text-[10px] font-medium tracking-widest uppercase backdrop-blur-sm">
-          {images[idx].includes('before') ? 'Before' : 'After'}
-        </span>
-      )}
       {idx > 0 && (
         <button
-          onPointerDown={(e) => { e.stopPropagation(); setIdx(i => i - 1); }}
-          className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/60 text-white rounded-full w-8 h-8 flex items-center justify-center text-lg opacity-0 group-hover:opacity-100 transition-opacity"
+          type="button"
+          onClick={(e) => { e.stopPropagation(); go(idx - 1); }}
+          className="absolute top-1/2 left-2 hidden h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-lg text-white opacity-0 transition-opacity group-hover:opacity-100 md:flex"
           aria-label="Previous"
         >‹</button>
       )}
       {idx < images.length - 1 && (
         <button
-          onPointerDown={(e) => { e.stopPropagation(); setIdx(i => i + 1); }}
-          className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/60 text-white rounded-full w-8 h-8 flex items-center justify-center text-lg opacity-0 group-hover:opacity-100 transition-opacity"
+          type="button"
+          onClick={(e) => { e.stopPropagation(); go(idx + 1); }}
+          className="absolute top-1/2 right-2 hidden h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-lg text-white opacity-0 transition-opacity group-hover:opacity-100 md:flex"
           aria-label="Next"
         >›</button>
       )}
-      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">
+      <div className="absolute bottom-2 left-1/2 hidden -translate-x-1/2 gap-1.5 md:flex">
         {images.map((_, i) => (
-          <button key={i} onPointerDown={() => setIdx(i)}
-            className={`rounded-full transition-all ${i === idx ? 'w-4 h-1.5 bg-white' : 'w-1.5 h-1.5 bg-white/50'}`}
-          />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function AutoSlideshow({ images, title }: { images: string[]; title: string }) {
-  const [idx, setIdx] = React.useState(0);
-  const startRef = React.useRef<number | null>(null);
-  const rafRef = React.useRef<number>(0);
-
-  React.useEffect(() => {
-    const tick = (ts: number) => {
-      if (startRef.current === null) startRef.current = ts;
-      if (ts - startRef.current >= SLIDE_MS) {
-        startRef.current = ts;
-        setIdx(i => (i + 1) % images.length);
-      }
-      rafRef.current = requestAnimationFrame(tick);
-    };
-    rafRef.current = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(rafRef.current);
-  }, [images.length]);
-
-  const label = images[idx].includes('before') ? 'Before' : images[idx].includes('after') ? 'After' : null;
-
-  return (
-    <div className="relative mb-4 w-full h-72 rounded-lg overflow-hidden bg-black">
-      <img
-        key={idx}
-        src={images[idx]}
-        alt={`${title} ${idx + 1}`}
-        className="w-full h-full object-cover"
-        loading="lazy"
-      />
-      {label && (
-        <span className="absolute top-3 right-3 px-2.5 py-0.5 rounded-full bg-black/60 text-white text-[10px] font-medium tracking-widest uppercase backdrop-blur-sm">
-          {label}
-        </span>
-      )}
-      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">
-        {images.map((_, i) => (
-          <div
+          <button
             key={i}
-            className={`rounded-full transition-all duration-300 ${i === idx ? 'w-4 h-1.5 bg-white' : 'w-1.5 h-1.5 bg-white/50'}`}
+            type="button"
+            onClick={(e) => { e.stopPropagation(); go(i); }}
+            className={`rounded-full transition-all ${i === idx ? "h-1.5 w-4 bg-white" : "h-1.5 w-1.5 bg-white/50"}`}
+            aria-label={`Image ${i + 1}`}
           />
         ))}
       </div>
@@ -336,11 +303,6 @@ export default function TimeLine_01({
     return () => cancelAnimationFrame(frame);
   }, [activeIndex]);
 
-  // Optional: ensure the first card is active on mount
-  useEffect(() => {
-    setActiveIndex(0);
-  }, []);
-
   useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
@@ -364,47 +326,18 @@ export default function TimeLine_01({
         </div>
       </div>
 
-      {/* Mobile: vertical stack */}
-      <div className="md:hidden px-4 mt-8 flex flex-col gap-4">
-        {entries.map((entry, index) => (
-          <article key={index} className="rounded-2xl border p-3 border-gray-50 dark:border-gray-800 bg-gray-50 dark:bg-black shadow-lg">
-            {entry.video ? (
-              <video src={entry.video} className="mb-4 w-full h-56 rounded-lg object-cover" autoPlay muted loop playsInline />
-            ) : entry.images && entry.images.length > 0 ? (
-              <ScrollSlideshow images={entry.images} title={entry.title} />
-            ) : entry.image && (
-              <img src={entry.image} alt={`${entry.title} visual`} className="mb-4 w-full h-56 rounded-lg object-cover" loading="lazy" />
-            )}
-            <div className="space-y-2">
-              <h2 className="text-md font-medium leading-tight tracking-tight text-foreground">
-                {entry.url ? (
-                  <a href={entry.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 hover:underline">
-                    {entry.title}
-                    <ArrowUpRight className="w-4 h-4 shrink-0 text-muted-foreground" />
-                  </a>
-                ) : entry.title}
-              </h2>
-              <p className="text-xs leading-relaxed text-muted-foreground">{entry.description}</p>
-            </div>
-          </article>
-        ))}
-      </div>
-
-      {/* Desktop: horizontal carousel */}
-      <div className="relative mt-8 md:mt-10 hidden md:block">
-        {/* Prev arrow */}
+      <div className="relative mt-8 md:mt-10">
         <button
           onClick={() => scroll('prev')}
-          className={`absolute left-4 top-1/2 -translate-y-1/2 z-20 rounded-full border border-border bg-background/80 backdrop-blur p-2 shadow-md transition-opacity duration-200 ${hovered && canScrollLeft ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+          className={`max-md:hidden absolute left-4 top-1/2 -translate-y-1/2 z-20 rounded-full border border-border bg-background/80 backdrop-blur p-2 shadow-md transition-opacity duration-200 ${hovered && canScrollLeft ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
           aria-label="Previous"
         >
           <ChevronLeft className="w-5 h-5" />
         </button>
 
-        {/* Next arrow */}
         <button
           onClick={() => scroll('next')}
-          className={`absolute right-4 top-1/2 -translate-y-1/2 z-20 rounded-full border border-border bg-background/80 backdrop-blur p-2 shadow-md transition-opacity duration-200 ${hovered && canScrollRight ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+          className={`max-md:hidden absolute right-4 top-1/2 -translate-y-1/2 z-20 rounded-full border border-border bg-background/80 backdrop-blur p-2 shadow-md transition-opacity duration-200 ${hovered && canScrollRight ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
           aria-label="Next"
         >
           <ChevronRight className="w-5 h-5" />
@@ -412,74 +345,56 @@ export default function TimeLine_01({
 
         <div
           ref={scrollRef}
-          className="flex items-stretch overflow-x-auto scroll-smooth pb-8 gap-4"
-          style={{
-            scrollSnapType: 'x mandatory',
-            scrollbarWidth: 'none',
-            msOverflowStyle: 'none',
-            maskImage: 'linear-gradient(to right, transparent 0%, black 8%, black 97%, transparent 100%)',
-            WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 8%, black 97%, transparent 100%)',
-          }}
+          className="flex flex-col gap-4 px-4 md:flex-row md:items-stretch md:overflow-x-auto md:scroll-smooth md:px-0 md:pb-8 md:[scroll-snap-type:x_mandatory] md:[scrollbar-width:none] md:[-ms-overflow-style:none] md:[mask-image:linear-gradient(to_right,transparent_0%,black_8%,black_97%,transparent_100%)] md:[-webkit-mask-image:linear-gradient(to_right,transparent_0%,black_8%,black_97%,transparent_100%)] md:[&::-webkit-scrollbar]:hidden"
         >
           {entries.map((entry, index) => {
             const isActive = index === activeIndex;
             const isFirst = index === 0;
             const isLast = index === entries.length - 1;
+            const firstOffset = firstCardMarginLeft != null
+              ? `${firstCardMarginLeft}px`
+              : "max(1rem, calc((100vw - 1280px) / 2))";
 
             return (
               <div
                 key={index}
-                className="relative shrink-0 w-[500px] max-w-[85vw] flex flex-col"
+                className="relative flex w-full flex-col md:w-[500px] md:max-w-[85vw] md:shrink-0 md:[scroll-snap-align:center] md:ml-[var(--project-card-ml)] md:mr-[var(--project-card-mr)]"
                 style={{
-                  scrollSnapAlign: 'center',
-                  marginLeft: isFirst ? (firstCardMarginLeft ?? 'max(1rem, calc((100vw - 1280px) / 2))') : undefined,
-                  marginRight: isLast ? '2rem' : undefined,
+                  ["--project-card-ml" as string]: isFirst ? firstOffset : "0px",
+                  ["--project-card-mr" as string]: isLast ? "2rem" : "0px",
                 }}
                 ref={(el) => setItemRef(el, index)}
                 aria-current={isActive ? "true" : "false"}
               >
-
-                {/* Invisible sentinel near the card title to measure proximity to viewport center */}
                 <div
                   ref={(el) => setSentinelRef(el, index)}
                   aria-hidden
                   className="absolute -top-24 left-0 h-12 w-12 opacity-0"
                 />
 
-                {/* Content column */}
-                <article
-                  className={
-                    "flex flex-col h-full rounded-2xl border p-3 transition-all duration-300 border-gray-50 dark:border-gray-800 bg-gray-50 dark:bg-black shadow-lg"
-                  }
-                >
+                <article className="flex h-full flex-col rounded-2xl border border-gray-50 bg-gray-50 p-3 shadow-lg md:transition-all md:duration-300 dark:border-gray-800 dark:bg-black">
                   {entry.video ? (
                     <video
                       src={entry.video}
-                      className="mb-4 w-full h-72 rounded-lg object-cover"
+                      className="mb-4 h-56 w-full rounded-lg object-cover md:h-72"
                       autoPlay
                       muted
                       loop
                       playsInline
                     />
                   ) : entry.images && entry.images.length > 0 ? (
-                    <DesktopImageCarousel images={entry.images} title={entry.title} imageFit={entry.imageFit} />
-                  ) : entry.image && (
+                    <ResponsiveGallery images={entry.images} imageFit={entry.imageFit} />
+                  ) : entry.image ? (
                     <img
                       src={entry.image}
-                      alt={`${entry.title} visual`}
-                      className="mb-4 w-full h-72 rounded-lg object-cover"
+                      alt="Project image"
+                      className="mb-4 h-56 w-full rounded-lg object-cover md:h-72"
                       loading="lazy"
                     />
-                  )}
-                  <div className="space-y-4">
-                    {/* Header with improved typography */}
+                  ) : null}
+                  <div className="md:space-y-4">
                     <div className="space-y-2">
-                      <h2
-                        className={
-                          "text-md font-medium leading-tight tracking-tight md:text-lg transition-colors duration-200 " +
-                          "text-foreground"
-                        }
-                      >
+                      <h2 className="text-md font-medium leading-tight tracking-tight text-foreground md:text-lg md:transition-colors md:duration-200">
                         {entry.url ? (
                           <a href={entry.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 hover:underline">
                             {entry.title}
@@ -487,32 +402,28 @@ export default function TimeLine_01({
                           </a>
                         ) : entry.title}
                       </h2>
-
-                      {/* Improved description with better spacing */}
                       <p
                         className={
-                          "text-xs leading-relaxed md:text-sm transition-all duration-300 " +
-                          (isActive
-                            ? "text-muted-foreground line-clamp-none"
-                            : "text-muted-foreground/80 line-clamp-none")
+                          "text-xs leading-relaxed text-muted-foreground line-clamp-none md:text-sm md:transition-all md:duration-300 " +
+                          (isActive ? "" : "md:text-muted-foreground/80")
                         }
                       >
                         {entry.description}
                       </p>
                     </div>
 
-                    <div>
+                    <div className="hidden md:block">
                       <div>
                         <div className="space-y-4 pt-2">
                           {entry.items && entry.items.length > 0 && (
-                            <div className="rounded-lg border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-black p-4">
+                            <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-800 dark:bg-black">
                               <ul className="space-y-2">
                                 {entry.items.map((item, itemIndex) => (
                                   <li
                                     key={itemIndex}
                                     className="flex items-start gap-2 text-sm text-muted-foreground"
                                   >
-                                    <div className="mt-1.5 h-1.5 w-1.5 rounded-full bg-primary/60 flex-shrink-0" />
+                                    <div className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary/60" />
                                     <span className="leading-relaxed">{item}</span>
                                   </li>
                                 ))}
@@ -525,7 +436,7 @@ export default function TimeLine_01({
                               <Button
                                 variant="default"
                                 size="sm"
-                                className="group hover:bg-primary hover:text-primary-foreground font-normal transition-all duration-200"
+                                className="group font-normal transition-all duration-200 hover:bg-primary hover:text-primary-foreground"
                                 asChild
                               >
                                 <a href={entry.button.url} target="_blank" rel="noreferrer">

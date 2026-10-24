@@ -22,6 +22,8 @@ interface TimelineProps {
   items: TimelineItem[];
   initialCount?: number;
   sortOrder?: "asc" | "desc";
+  /** Which layout to render. "responsive" keeps both breakpoint trees. */
+  variant?: "responsive" | "mobile" | "desktop";
   className?: string;
   showMoreText?: string;
   showLessText?: string;
@@ -215,6 +217,7 @@ export function Timeline({
   items,
   initialCount = 5,
   sortOrder = "desc",
+  variant = "responsive",
   className,
   showMoreText = "Show More",
   showLessText = "Show Less",
@@ -229,6 +232,8 @@ export function Timeline({
   animationDelay = 0.1,
   showAnimation = true,
 }: TimelineProps) {
+  const showDesktop = variant !== "mobile";
+  const showMobile = variant !== "desktop";
   const [showAll, setShowAll] = useState(false);
   const sortedItems = [...items].sort((a, b) => {
     const diff = new Date(b.date).getTime() - new Date(a.date).getTime();
@@ -258,24 +263,28 @@ export function Timeline({
                   delay: index * animationDelay,
                 }}
               >
-                <DesktopTimelineEntry
-                  item={item}
-                  dotClassName={dotClassName}
-                  lineClassName={lineClassName}
-                  titleClassName={titleClassName}
-                  descriptionClassName={descriptionClassName}
-                  dateClassName={dateClassName}
-                />
-                <MobileTimelineEntry
-                  item={item}
-                  isFirst={isFirst}
-                  isLast={isLast}
-                  dotClassName={dotClassName}
-                  lineClassName={lineClassName}
-                  titleClassName={titleClassName}
-                  descriptionClassName={descriptionClassName}
-                  dateClassName={dateClassName}
-                />
+                {showDesktop && (
+                  <DesktopTimelineEntry
+                    item={item}
+                    dotClassName={dotClassName}
+                    lineClassName={lineClassName}
+                    titleClassName={titleClassName}
+                    descriptionClassName={descriptionClassName}
+                    dateClassName={dateClassName}
+                  />
+                )}
+                {showMobile && (
+                  <MobileTimelineEntry
+                    item={item}
+                    isFirst={isFirst}
+                    isLast={isLast}
+                    dotClassName={dotClassName}
+                    lineClassName={lineClassName}
+                    titleClassName={titleClassName}
+                    descriptionClassName={descriptionClassName}
+                    dateClassName={dateClassName}
+                  />
+                )}
               </motion.li>
             );
           })}
@@ -292,22 +301,26 @@ export function Timeline({
                     delay: index * animationDelay,
                   }}
                 >
-                  <DesktopTimelineEntry
-                    item={item}
-                    dotClassName={dotClassName}
-                    lineClassName={lineClassName}
-                    titleClassName={titleClassName}
-                    descriptionClassName={descriptionClassName}
-                    dateClassName={dateClassName}
-                  />
-                  <MobileTimelineEntry
-                    item={item}
-                    dotClassName={dotClassName}
-                    lineClassName={lineClassName}
-                    titleClassName={titleClassName}
-                    descriptionClassName={descriptionClassName}
-                    dateClassName={dateClassName}
-                  />
+                  {showDesktop && (
+                    <DesktopTimelineEntry
+                      item={item}
+                      dotClassName={dotClassName}
+                      lineClassName={lineClassName}
+                      titleClassName={titleClassName}
+                      descriptionClassName={descriptionClassName}
+                      dateClassName={dateClassName}
+                    />
+                  )}
+                  {showMobile && (
+                    <MobileTimelineEntry
+                      item={item}
+                      dotClassName={dotClassName}
+                      lineClassName={lineClassName}
+                      titleClassName={titleClassName}
+                      descriptionClassName={descriptionClassName}
+                      dateClassName={dateClassName}
+                    />
+                  )}
                 </motion.li>
               ))}
           </AnimatePresence>

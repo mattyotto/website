@@ -3,6 +3,7 @@ import { Analytics } from "@vercel/analytics/next";
 import localFont from "next/font/local";
 import { Space_Mono, Inter } from "next/font/google";
 import { ThemeProvider } from "next-themes";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 const courierPrime = localFont({
@@ -28,8 +29,28 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Matty Giuffre",
-  description: "Senior Program Manager at Canva. Builder. Aspiring PM.",
+  metadataBase: new URL(SITE_URL),
+  title: SITE_NAME,
+  description: SITE_DESCRIPTION,
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+    url: "/",
+    siteName: SITE_NAME,
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({

@@ -184,7 +184,7 @@ export default function ExperienceDock() {
     <div id="experience">
       {/* Mobile: timeline */}
       <div className="md:hidden">
-        <Timeline items={mobileTimelineItems} initialCount={3} showAnimation={false} sortOrder="asc" />
+        <Timeline items={mobileTimelineItems} initialCount={3} showAnimation={false} sortOrder="asc" variant="mobile" />
       </div>
       {/* Desktop: dock */}
       <div className="hidden md:flex justify-center">

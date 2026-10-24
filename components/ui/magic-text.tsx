@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { useEffect, useRef } from "react";
-import { motion, useMotionValue, useTransform } from "motion/react";
+import { motion, useMotionValue, useTransform, type MotionValue } from "motion/react";
 
 export interface MagicTextProps {
   text: string;
@@ -10,17 +10,17 @@ export interface MagicTextProps {
 
 interface WordProps {
   children: string;
-  progress: any;
+  progress: MotionValue<number>;
   range: number[];
 }
 
 const Word: React.FC<WordProps> = ({ children, progress, range }) => {
-  const opacity = useTransform(progress, range, [0, 1]);
+  // One text node. Desktop fades 20% → 100%, which is the same composite as the
+  // old always-on ghost plus a fading copy. Mobile stays fully opaque.
+  const opacity = useTransform(progress, range, [0.2, 1]);
   return (
     <span className="relative mt-[12px] mr-1 text-3xl font-semibold">
-      <span className="absolute opacity-20 md:block hidden">{children}</span>
-      <motion.span className="hidden md:inline" style={{ opacity }}>{children}</motion.span>
-      <span className="md:hidden">{children}</span>
+      <motion.span className="max-md:!opacity-100" style={{ opacity }}>{children}</motion.span>
     </span>
   );
 };

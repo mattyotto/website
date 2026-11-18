@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef } from "react";
+import { SITE_DESCRIPTION } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import {
   motion,
@@ -61,8 +62,8 @@ export const Component = () => {
           <h1 className="text-6xl md:text-8xl font-extrabold tracking-tight text-foreground drop-shadow-sm">
             Matty Giuffre
           </h1>
-          <p className="text-2xl md:text-3xl text-muted-foreground">
-            Product. Strategy. Builder.
+          <p className="text-2xl md:text-3xl text-balance text-muted-foreground">
+            {SITE_DESCRIPTION}
           </p>
         </div>
       </div>

@@ -18,13 +18,13 @@ Personal portfolio site for Matthew Giuffre. Single-page scrollable SPA with anc
 - Google Stitch MCP connected — use to generate UI sections before coding
 
 ## Site Sections
-1. **Hero** — Name, "Senior Program Manager · Canva", tagline, LinkedIn + email CTAs
+1. **Hero** — Name, "Senior Program Manager · Canva", tagline, LinkedIn CTA
 2. **About** — Bio, bridges technical + business
 3. **Experience** — Timeline/cards: Canva → Pinterest → Accenture → Gartner
 4. **Skills** — SQL, Python, AI tools, Salesforce, Adobe
 5. **Education** — UNSW + NYU Stern
 6. **Awards** — Luthaus Prize 2019
-7. **Contact** — Email + LinkedIn
+7. **Contact** — LinkedIn
 
 ## About Matt (CV Summary)
 
@@ -57,7 +57,7 @@ Personal portfolio site for Matthew Giuffre. Single-page scrollable SPA with anc
 
 **Skills**: SQL, Python, AI tools (Claude Code, Cursor, n8n, custom GPTs), Salesforce, Adobe (Photoshop, InDesign, Premiere)
 
-**Contact**: matthew.e.giuffre@gmail.com | linkedin.com/in/matthew-giuffre | Sydney, Australia
+**Contact**: https://linkedin.com/in/matthewgiuffre | Sydney, Australia
 
 ## Build Status
 - [x] Planning complete

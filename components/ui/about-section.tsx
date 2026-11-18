@@ -1,6 +1,7 @@
 "use client";
 
 import { TimelineContent } from "@/components/ui/timeline-animation";
+import { LINKEDIN_URL } from "@/lib/site";
 import { ArrowRight } from "lucide-react";
 import { useRef } from "react";
 
@@ -146,10 +147,10 @@ export default function AboutSection() {
           className="mt-16"
         >
           <a
-            href="mailto:matthew.e.giuffre@gmail.com"
+            href={LINKEDIN_URL}
             className="inline-flex items-center gap-2 font-annotation text-sm text-muted-foreground hover:text-foreground transition-colors group"
           >
-            Get in touch
+            Connect on LinkedIn
             <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
           </a>
         </TimelineContent>

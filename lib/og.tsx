@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og";
+import sharp from "sharp";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { SITE_DESCRIPTION, SITE_NAME } from "@/lib/site";
@@ -11,8 +12,8 @@ const BACKGROUND = "#FAFAF9";
 const FOREGROUND = "#111110";
 const MUTED = "#78716C";
 const AVATAR_SIZE = 332;
-const AVATAR_WINDOW = 300;
-const AVATAR_FADE = 132;
+// Same resting grid as the hero: muted-foreground strokes at ~5% opacity.
+const GRID_STROKE_OPACITY = 0.05;
 
 const regularFont = readFile(join(process.cwd(), "public/fonts/Inter-Regular.ttf"));
 const boldFont = readFile(join(process.cwd(), "public/fonts/Inter-Bold.ttf"));
@@ -21,23 +22,46 @@ const avatarFile = readFile(join(process.cwd(), "public/avatar2.png"));
 function gridDataUrl(width: number, height: number) {
   const step = 40;
   const lines: string[] = [];
-  for (let x = 0; x <= width; x += step) {
+  for (let x = step; x < width; x += step) {
+    const pos = x + 0.5;
     lines.push(
-      `<line x1="${x}" y1="0" x2="${x}" y2="${height}" stroke="#78716C" stroke-opacity="0.34" stroke-width="1.5"/>`,
+      `<line x1="${pos}" y1="0" x2="${pos}" y2="${height}" stroke="#78716C" stroke-opacity="${GRID_STROKE_OPACITY}" stroke-width="1"/>`,
     );
   }
-  for (let y = 0; y <= height; y += step) {
+  for (let y = step; y < height; y += step) {
+    const pos = y + 0.5;
     lines.push(
-      `<line x1="0" y1="${y}" x2="${width}" y2="${y}" stroke="#78716C" stroke-opacity="0.34" stroke-width="1.5"/>`,
+      `<line x1="0" y1="${pos}" x2="${width}" y2="${pos}" stroke="#78716C" stroke-opacity="${GRID_STROKE_OPACITY}" stroke-width="1"/>`,
     );
   }
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">${lines.join("")}</svg>`;
   return `data:image/svg+xml;base64,${Buffer.from(svg).toString("base64")}`;
 }
 
+/** Fade the portrait's alpha the way the hero mask does, so no overlay box is painted. */
+async function fadeAvatarBottom(input: Buffer) {
+  const { data, info } = await sharp(input)
+    .ensureAlpha()
+    .raw()
+    .toBuffer({ resolveWithObject: true });
+  const { width, height, channels } = info;
+  const pixels = Buffer.from(data);
+  const fadeStart = Math.round(height * 0.6);
+  const span = height - 1 - fadeStart;
+  for (let y = fadeStart; y < height; y++) {
+    const keep = span <= 0 ? 0 : 1 - (y - fadeStart) / span;
+    for (let x = 0; x < width; x++) {
+      const i = (y * width + x) * channels + 3;
+      pixels[i] = Math.round(pixels[i] * keep);
+    }
+  }
+  return sharp(pixels, { raw: { width, height, channels } }).png().toBuffer();
+}
+
 export async function createOgImage() {
   const [regular, bold, avatar] = await Promise.all([regularFont, boldFont, avatarFile]);
-  const avatarSrc = `data:image/png;base64,${avatar.toString("base64")}`;
+  const fadedAvatar = await fadeAvatarBottom(avatar);
+  const avatarSrc = `data:image/png;base64,${fadedAvatar.toString("base64")}`;
 
   return new ImageResponse(
     (
@@ -70,38 +94,17 @@ export async function createOgImage() {
             alignItems: "center",
           }}
         >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            alt=""
+            src={avatarSrc}
+            width={AVATAR_SIZE}
+            height={AVATAR_SIZE}
+          />
           <div
             style={{
               display: "flex",
-              position: "relative",
-              width: AVATAR_SIZE,
-              height: AVATAR_WINDOW,
-              overflow: "hidden",
-            }}
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              alt=""
-              src={avatarSrc}
-              width={AVATAR_SIZE}
-              height={AVATAR_SIZE}
-              style={{ objectFit: "cover", objectPosition: "center top" }}
-            />
-            <div
-              style={{
-                position: "absolute",
-                left: 0,
-                bottom: 0,
-                width: AVATAR_SIZE,
-                height: AVATAR_FADE,
-                backgroundImage: `linear-gradient(to bottom, rgba(250,250,249,0) 0%, ${BACKGROUND} 80%)`,
-              }}
-            />
-          </div>
-          <div
-            style={{
-              display: "flex",
-              marginTop: 4,
+              marginTop: -8,
               fontSize: 76,
               fontWeight: 700,
               letterSpacing: -2.2,
